@@ -67,12 +67,12 @@ function modifier_item_imba_arcane_boots:DeclareFunctions()
 end
 
 function modifier_item_imba_arcane_boots:GetModifierMoveSpeedBonus_Special_Boots()
-	return self:GetAbility():GetSpecialValueFor("bonus_ms") end
+	return self:GetAbility():GetSpecialValueFor("bonus_ms")
+end
 
 function modifier_item_imba_arcane_boots:GetModifierManaBonus()
-	return self:GetAbility():GetSpecialValueFor("bonus_mana") end
-
-
+	return self:GetAbility():GetSpecialValueFor("bonus_mana")
+end
 
 -----------------------------------------------------------------------------------------------------------
 --	Mekansm definition
@@ -88,12 +88,14 @@ function item_imba_mekansm:GetIntrinsicModifierName()
 	return "modifier_item_imba_mekansm" end
 
 function item_imba_mekansm:GetAbilityTextureName()
-   return "custom/imba_mekansm"
+	if not IsClient() then return end
+	local caster = self:GetCaster()
+	if not caster.mekansm_icon_client then return "custom/imba_mekansm" end
+	return "custom/imba_mekansm"..caster.mekansm_icon_client
 end
 
 function item_imba_mekansm:OnSpellStart()
 	if IsServer() then
-
 		-- Parameters
 		local caster = self:GetCaster()
 		local heal_amount = self:GetSpecialValueFor("heal_amount") * (1 + caster:GetSpellPower() * 0.01)
@@ -102,7 +104,7 @@ function item_imba_mekansm:OnSpellStart()
 
 		-- Play activation sound and particle
 		caster:EmitSound("DOTA_Item.Mekansm.Activate")
-		local mekansm_pfx = ParticleManager:CreateParticle("particles/items2_fx/mekanism.vpcf", PATTACH_ABSORIGIN_FOLLOW, caster)
+		local mekansm_pfx = ParticleManager:CreateParticle(caster.mekansm_effect, PATTACH_ABSORIGIN_FOLLOW, caster)
 		ParticleManager:ReleaseParticleIndex(mekansm_pfx)
 
 		-- Iterate through nearby allies
@@ -116,7 +118,7 @@ function item_imba_mekansm:OnSpellStart()
 
 			-- Play healing sound & particle
 			ally:EmitSound("DOTA_Item.Mekansm.Target")
-			local mekansm_target_pfx = ParticleManager:CreateParticle("particles/items2_fx/mekanism_recipient.vpcf", PATTACH_ABSORIGIN_FOLLOW, ally)
+			local mekansm_target_pfx = ParticleManager:CreateParticle(caster.mekansm_hit_effect, PATTACH_ABSORIGIN_FOLLOW, ally)
 			ParticleManager:SetParticleControl(mekansm_target_pfx, 0, caster_loc)
 			ParticleManager:SetParticleControl(mekansm_target_pfx, 1, ally:GetAbsOrigin())
 			ParticleManager:ReleaseParticleIndex(mekansm_target_pfx)
@@ -144,6 +146,24 @@ function modifier_item_imba_mekansm:OnCreated(keys)
 		local parent = self:GetParent()
 		if not parent:HasModifier("modifier_item_imba_mekansm_aura_emitter") then
 			parent:AddNewModifier(parent, self:GetAbility(), "modifier_item_imba_mekansm_aura_emitter", {})
+		end
+	end
+	self:OnIntervalThink()
+	self:StartIntervalThink(1.0)
+end
+
+function modifier_item_imba_mekansm:OnIntervalThink()
+	local caster = self:GetCaster()
+	if caster:IsIllusion() then return end
+	if IsServer() then
+		self:SetStackCount(caster.mekansm_icon)
+	end
+	if IsClient() then
+		local icon = self:GetStackCount()
+		if icon == 0 then
+			caster.mekansm_icon_client = nil
+		else
+			caster.mekansm_icon_client = icon
 		end
 	end
 end
@@ -499,7 +519,8 @@ function modifier_item_imba_guardian_greaves_heal:IsPurgable() return true end
 
 -- Modifier texture
 function modifier_item_imba_guardian_greaves_heal:GetTexture()
-	return "custom/imba_guardian_greaves" end
+	return "custom/imba_guardian_greaves"
+end
 
 -- Stores the ability's parameters to prevent errors if the item is destroyed
 function modifier_item_imba_guardian_greaves_heal:OnCreated(keys)
@@ -515,14 +536,14 @@ function modifier_item_imba_guardian_greaves_heal:DeclareFunctions()
 end
 
 function modifier_item_imba_guardian_greaves_heal:GetModifierHealthRegenPercentage()
-	return self.mend_regen end
+	return self.mend_regen
+end
 
 -----------------------------------------------------------------------------------------------------------
 --	Guardian Greaves active
 -----------------------------------------------------------------------------------------------------------
 
 function GreavesActivate(caster, ability, heal_amount, mana_amount, heal_radius, heal_duration)
-
 	-- Purge debuffs from the caster
 	caster:Purge(false, true, false, true, false)
 

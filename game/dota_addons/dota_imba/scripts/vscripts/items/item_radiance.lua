@@ -30,7 +30,11 @@ end
 
 function item_imba_radiance:GetAbilityTextureName()
 	if self:GetCaster():HasModifier("modifier_imba_radiance_aura") then
-		return "custom/imba_radiance" end
+		if not IsClient() then return end
+		local caster = self:GetCaster()
+		if not caster.radiance_icon_client then return "custom/imba_radiance" end
+		return "custom/imba_radiance"..caster.radiance_icon_client
+	end
 	
 	return "custom/imba_radiance_inactive"
 end
@@ -53,7 +57,26 @@ function modifier_imba_radiance_basic:OnCreated(keys)
 			parent:AddNewModifier(parent, self:GetAbility(), "modifier_imba_radiance_aura", {})
 		end
 	end
+	self:OnIntervalThink()
+	self:StartIntervalThink(1.0)
 end
+
+function modifier_imba_radiance_basic:OnIntervalThink()
+	local caster = self:GetCaster()
+	if caster:IsIllusion() then return end
+	if IsServer() then
+		self:SetStackCount(caster.radiance_icon)
+	end
+	if IsClient() then
+		local icon = self:GetStackCount()
+		if icon == 0 then
+			caster.radiance_icon_client = nil
+		else
+			caster.radiance_icon_client = icon
+		end
+	end
+end
+
 
 -- Removes the unique modifier from the owner if this is the last Radiance in its inventory
 function modifier_imba_radiance_basic:OnDestroy(keys)
@@ -85,19 +108,23 @@ function modifier_imba_radiance_aura:GetAuraSearchTeam()
 	return DOTA_UNIT_TARGET_TEAM_ENEMY end
 	
 function modifier_imba_radiance_aura:GetAuraSearchType()
-	return DOTA_UNIT_TARGET_BASIC + DOTA_UNIT_TARGET_HERO end
+	return DOTA_UNIT_TARGET_BASIC + DOTA_UNIT_TARGET_HERO
+end
 	
 function modifier_imba_radiance_aura:GetModifierAura()
-	return "modifier_imba_radiance_burn" end
+	return "modifier_imba_radiance_burn"
+end
 	
 function modifier_imba_radiance_aura:GetAuraRadius()
-	return self:GetAbility():GetSpecialValueFor("aura_radius") end
+	return self:GetAbility():GetSpecialValueFor("aura_radius")
+end
 
 -- Create the glow particle and start thinking
 function modifier_imba_radiance_aura:OnCreated()
 	if IsServer() then
 		local parent = self:GetParent()
-		self.particle = ParticleManager:CreateParticle("particles/item/radiance/radiance_owner.vpcf", PATTACH_ABSORIGIN_FOLLOW, parent)
+
+		self.particle = ParticleManager:CreateParticle(parent.radiance_effect, PATTACH_ABSORIGIN_FOLLOW, parent)
 		ParticleManager:SetParticleControl(self.particle, 2, parent:GetFittingColor())
 		self:StartIntervalThink(0.5)
 	end

@@ -97,8 +97,7 @@ function modifier_imba_arcane_orb_thinker:OnAttackStart(keys)
 		end
 
 		-- Only apply on caster's attacks
-		if self.caster == attacker then                                 
-
+		if self.caster == attacker then
 			-- Assume it's an Arcane Orb unless otherwise stated
 			local orb_attack = true            
 
@@ -115,6 +114,10 @@ function modifier_imba_arcane_orb_thinker:OnAttackStart(keys)
 			-- If the target is a building or is magic immune, mark attack as non-orb
 			if target:IsBuilding() or target:IsMagicImmune() then
 				orb_attack = false                
+			end
+
+			if self.caster:GetTeamNumber() == target:GetTeamNumber() then
+				orb_attack = false
 			end
 
 			-- If it wasn't a forced arcane orb attack (through ability cast), or
@@ -147,8 +150,7 @@ function modifier_imba_arcane_orb_thinker:OnAttack(keys)
 		local target = keys.target
 
 		-- Only apply on caster's attacks
-		if self.caster == keys.attacker then            
-				
+		if self.caster == keys.attacker then
 			-- Clear instance of ability's forced arcane orb attack
 			self.ability.force_arcane_orb = nil                        
 
@@ -211,6 +213,7 @@ function modifier_imba_arcane_orb_thinker:ApplyArcaneOrbAttack(target)
 		local damageTable = {victim = target,
 							damage = damage,
 							damage_type = DAMAGE_TYPE_PURE,
+							damage_flags = DOTA_DAMAGE_FLAG_NO_SPELL_AMPLIFICATION,
 							attacker = self.caster,
 							ability = self.ability
 							}
@@ -256,6 +259,7 @@ function modifier_imba_arcane_orb_thinker:ApplyArcaneOrbAttack(target)
 						local damageTable = {victim = enemy,
 											damage = (damage - self.illusion_bonus_dmg),
 											damage_type = DAMAGE_TYPE_PURE,
+											damage_flags = DOTA_DAMAGE_FLAG_NO_SPELL_AMPLIFICATION,
 											attacker = self.caster,
 											ability = self.ability
 											}
@@ -309,6 +313,7 @@ function modifier_imba_arcane_orb_thinker:ApplyArcaneOrbAttack(target)
 				damage = damage,
 				damage_type = DAMAGE_TYPE_PURE,
 				attacker = self.caster,
+				damage_flags = DOTA_DAMAGE_FLAG_NO_SPELL_AMPLIFICATION,
 				ability = self.ability
 				}
 														
@@ -998,7 +1003,7 @@ function modifier_imba_astral_imprisonment:OnDestroy()
 
 		-- Bring the model back
 		self.parent:RemoveNoDraw()
-		
+
 		Timers:CreateTimer(FrameTime(), function()
 		-- Find all units in radius
 		local enemies = FindUnitsInRadius(self.caster:GetTeamNumber(),
@@ -1138,8 +1143,7 @@ function modifier_imba_astral_imprisonment_buff:OnIntervalThink()
 	ParticleManager:SetParticleControl(self.particle_prison_fx, 0, self.target:GetAbsOrigin())
 	ParticleManager:SetParticleControl(self.particle_prison_fx, 2, self.target:GetAbsOrigin())
 	ParticleManager:SetParticleControl(self.particle_prison_fx, 3, self.target:GetAbsOrigin())
-	
-	
+
 	-- #4 Talent: Moving the disabled units along with the prison
 	if self.caster:HasTalent("special_bonus_imba_obsidian_destroyer_4") then
 			
@@ -1159,10 +1163,8 @@ function modifier_imba_astral_imprisonment_buff:OnIntervalThink()
 			if enemy:HasModifier("modifier_imba_astral_imprisonment_sucked") then
 			enemy:SetAbsOrigin(self.current_location)
 			end
-		end                
-				
+		end
 	end
-	
 end
 
 --	function modifier_imba_astral_imprisonment_buff:OnDestroy()
@@ -1175,7 +1177,6 @@ end
 function modifier_imba_astral_imprisonment_buff:IsHidden() return true end
 function modifier_imba_astral_imprisonment_buff:IsPurgable() return false end
 function modifier_imba_astral_imprisonment_buff:IsDebuff() return false end
-
 
 modifier_imba_astral_imprisonment_sucked = class({})
 
@@ -1207,8 +1208,6 @@ function modifier_imba_astral_imprisonment_sucked:OnDestroy()
 	end
 end
 
-
-
 ---------------------------
 --     ESSENCE AURA      --
 ---------------------------
@@ -1237,8 +1236,6 @@ function modifier_imba_essence_aura:OnCreated()
 
 	-- Ability specials
 	self.radius = self.ability:GetSpecialValueFor("radius")
-	self.base_bonus_mana = self.ability:GetSpecialValueFor("base_bonus_mana")
-	self.int_bonus_mana_mult = self.ability:GetSpecialValueFor("int_bonus_mana_mult")   
 
 	if IsServer() then
 		-- If it is an illusion, find the real one and get his current int. Do not think.
@@ -1319,17 +1316,6 @@ function modifier_imba_essence_aura:IsAura()
 
 		return true
 	end
-end
-
-function modifier_imba_essence_aura:DeclareFunctions()
-	local decFunc = {MODIFIER_PROPERTY_MANA_BONUS}
-
-	return decFunc
-end
-
-function modifier_imba_essence_aura:GetModifierManaBonus()
-	local int = self:GetStackCount()
-	return self.base_bonus_mana + (int * self.int_bonus_mana_mult)
 end
 
 function modifier_imba_essence_aura:AllowIllusionDuplicate()

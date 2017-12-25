@@ -9,6 +9,7 @@ DebugPrint("[IMBA] Performing pre-load precache")
 
 	-- Lua modifiers activation
 	LinkLuaModifier("modifier_imba_speed_limit_break", "modifier/modifier_imba_speed_limit_break.lua", LUA_MODIFIER_MOTION_NONE )
+	LinkLuaModifier("modifier_imba_amphibian", "modifier/modifier_imba_amphibian.lua", LUA_MODIFIER_MOTION_NONE )
 	LinkLuaModifier("modifier_imba_contributor_statue", "modifier/modifier_imba_contributor_statue.lua", LUA_MODIFIER_MOTION_NONE )
 	LinkLuaModifier("modifier_imba_haste_rune_speed_limit_break", "modifier/modifier_imba_haste_rune_speed_limit_break.lua", LUA_MODIFIER_MOTION_NONE )
 	LinkLuaModifier("modifier_imba_haste_boots_speed_break", "modifier/modifier_imba_haste_boots_speed_break.lua", LUA_MODIFIER_MOTION_NONE )
@@ -21,12 +22,20 @@ DebugPrint("[IMBA] Performing pre-load precache")
 	LinkLuaModifier("modifier_courier_hack", "modifier/modifier_courier_hack.lua", LUA_MODIFIER_MOTION_NONE )
 
 	-- Runes modifiers
+	LinkLuaModifier("modifier_imba_arcane_rune", "modifier/runes/modifier_imba_arcane_rune.lua", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_imba_arcane_rune_aura", "modifier/runes/modifier_imba_arcane_rune.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_imba_double_damage_rune", "modifier/runes/modifier_imba_double_damage_rune.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_imba_rune_double_damage_aura", "modifier/runes/modifier_imba_double_damage_rune.lua", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_imba_haste_rune", "modifier/runes/modifier_imba_haste_rune", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_imba_haste_rune_aura", "modifier/runes/modifier_imba_haste_rune", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_imba_regen_rune", "modifier/runes/modifier_imba_regen_rune", LUA_MODIFIER_MOTION_NONE)
 	LinkLuaModifier("modifier_imba_regen_rune_aura", "modifier/runes/modifier_imba_regen_rune", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_imba_frost_rune", "modifier/runes/modifier_imba_frost_rune", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_imba_frost_rune_aura", "modifier/runes/modifier_imba_frost_rune", LUA_MODIFIER_MOTION_NONE)
+	LinkLuaModifier("modifier_imba_frost_rune_slow", "modifier/runes/modifier_imba_frost_rune", LUA_MODIFIER_MOTION_NONE)
+
+	-- Fountain Particle
+	LinkLuaModifier("modifier_imba_fountain_particle_control", "modifier/modifier_fountain_particle", LUA_MODIFIER_MOTION_NONE)
 
 	-- Aegis
 	LinkLuaModifier("modifier_item_imba_aegis", "items/item_aegis.lua", LUA_MODIFIER_MOTION_NONE)
@@ -183,6 +192,9 @@ DebugPrint("[IMBA] Performing pre-load precache")
 	PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_phantom_lancer.vsndevts", context)
 	PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_spirit_breaker.vsndevts", context)
 	PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_invoker.vsndevts", context)
+	PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_abyssal_underlord.vsndevts", context)
+	PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_razor.vsndevts", context)
+	PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_weaver.vsndevts", context)
 	PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_roshan_halloween.vsndevts", context)
 
 	-- Rapier sounds

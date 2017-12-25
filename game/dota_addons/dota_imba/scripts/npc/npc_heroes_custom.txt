@@ -3,6 +3,21 @@
 	//LEGEND
 	// "IsDisabled": 0 = Enabled, 1 = 10v10 disabled, 2 = frantic disabled 3 = fully disabled.
 
+	"npc_dota_hero_arc_warden"
+	{
+		"override_hero"				"npc_dota_hero_arc_warden"
+
+		//Picking Screen
+		"AttributePrimary"			"DOTA_ATTRIBUTE_AGILITY"
+
+		"Ability1"					"arc_warden_flux"
+		"Ability2"					"arc_warden_magnetic_field"
+		"Ability3"					"arc_warden_spark_wraith"
+		"Ability4"					"generic_hidden"
+		"Ability5"					"generic_hidden"
+		"Ability6"					"arc_warden_tempest_double"
+	}
+
 	//=================================================================================================================
 	// HERO: Abaddon
 	//=================================================================================================================
@@ -251,7 +266,6 @@
 
 		//Picking Screen
 		"AttributePrimary"			"DOTA_ATTRIBUTE_STRENGTH"
-		"IsDisabled"				"3"
 
 		"Ability1"					"beastmaster_wild_axes"
 		"Ability2"					"beastmaster_call_of_the_wild"
@@ -1180,7 +1194,6 @@
 //		"AttackRate"				"1.5"
 
 //		//Picking Screen
-//		"IsNew"						"1"
 //		"IsImba"					"1"
 //		"AttributePrimary"			"DOTA_ATTRIBUTE_AGILITY"
 
@@ -1283,9 +1296,40 @@
 	//=================================================================================================================
 	// HERO: Pudge
 	//=================================================================================================================
+//	"npc_dota_hero_pudge"
+//	{
+//		"override_hero"				"npc_dota_hero_pudge"
+//		"AttackRange"				"200"
+
+//		//Picking Screen
+//		"IsImba"					"1"
+//		"AttributePrimary"			"DOTA_ATTRIBUTE_STRENGTH"
+
+//		"Ability1"					"imba_pudge_meat_hook"
+//		"Ability2"					"imba_pudge_rot"
+//		"Ability3"					"imba_pudge_butchers_cleaver"
+//		"Ability4"					"imba_pudge_flesh_heap"
+//		"Ability5"					"generic_hidden"
+//		"Ability6"					"imba_pudge_dismember"		
+
+//		"Ability10"					"special_bonus_imba_pudge_2" // Meat Shield: Consume X stacks of charges to block Y damage, restores after Z seconds, Ignore on A damage?
+//		"Ability11"					"special_bonus_imba_pudge_6" // Hook now deals damage for each tree the unit passes through
+//		"Ability12"					"special_bonus_imba_pudge_3" // Bonus Spellsteal per Flesh Heap stack
+//		"Ability13"					"special_bonus_imba_pudge_4" // Pudge lifesteals from all sources of damage on units rooted by Cleaver 
+//		"Ability14"					"special_bonus_imba_pudge_5" // Cleaver can now pierce through enemies, damaging and affecting all enemies in a straight line.
+//		"Ability15"					"special_bonus_imba_pudge_1" // Rot deals x more damage for every y% health he misses
+//		"Ability16"					"special_bonus_imba_pudge_8" // Triple Meat Hooks
+//		"Ability17"					"special_bonus_imba_pudge_7" // Dismember now disarms the target after the duration for the channeled duration
+//	}
+
+	//========================================================================================================
+	// HERO: Pudge
+	//========================================================================================================
 	"npc_dota_hero_pudge"
 	{
 		"override_hero"				"npc_dota_hero_pudge"
+		"ModelScale"				"1.0"
+		"MovementTurnRate"			"1.0"
 		"AttackRange"				"200"
 
 		//Picking Screen
@@ -1294,19 +1338,21 @@
 
 		"Ability1"					"imba_pudge_meat_hook"
 		"Ability2"					"imba_pudge_rot"
-		"Ability3"					"imba_pudge_butchers_cleaver"
-		"Ability4"					"imba_pudge_flesh_heap"
-		"Ability5"					"generic_hidden"
-		"Ability6"					"imba_pudge_dismember"		
+		"Ability3"					"imba_pudge_flesh_heap"
+		"Ability4"					"imba_pudge_sharp_hook"
+		"Ability5"					"imba_pudge_light_hook"
+		"Ability6"					"imba_pudge_dismember"
 
-		"Ability10"					"special_bonus_imba_pudge_2" // Meat Shield: Consume X stacks of charges to block Y damage, restores after Z seconds, Ignore on A damage?
-		"Ability11"					"special_bonus_imba_pudge_6" // Hook now deals damage for each tree the unit passes through
-		"Ability12"					"special_bonus_imba_pudge_3" // Bonus Spellsteal per Flesh Heap stack
-		"Ability13"					"special_bonus_imba_pudge_4" // Pudge lifesteals from all sources of damage on units rooted by Cleaver 
-		"Ability14"					"special_bonus_imba_pudge_5" // Cleaver can now pierce through enemies, damaging and affecting all enemies in a straight line.
-		"Ability15"					"special_bonus_imba_pudge_1" // Rot deals x more damage for every y% health he misses
-		"Ability16"					"special_bonus_imba_pudge_8" // Triple Meat Hooks
-		"Ability17"					"special_bonus_imba_pudge_7" // Dismember now disarms the target after the duration for the channeled duration
+		"Ability10"					"special_bonus_imba_pudge_1" // +10 Power and Swift stacks
+		"Ability11"					"special_bonus_imba_pudge_4" // +10 Flesh Heap magic resist stack
+		"Ability12"					"special_bonus_imba_pudge_2" // +300 Hook Speed
+		"Ability13"					"special_bonus_imba_pudge_3" // +100 Hook Width
+		"Ability14"					"special_bonus_imba_pudge_8" // Dismember last 2 more seconds
+		"Ability15"					"special_bonus_imba_pudge_6" // Increase Rot Damage
+		"Ability16"					"special_bonus_imba_pudge_7" // Meat Hook applies Rupture
+		"Ability17"					"special_bonus_imba_pudge_5" // nothing yet
+
+		"ProjectileSpeed"			"900"
 	}
 
 	//=================================================================================================================
@@ -1699,35 +1745,6 @@
 	}
 
 	//=================================================================================================================
-	// HERO: Techies
-	//=================================================================================================================
-	"npc_dota_hero_techies"
-	{
-		"override_hero"				"npc_dota_hero_techies"
-
-		//Picking Screen
-		"IsImba"					"1"
-		"AttributePrimary"			"DOTA_ATTRIBUTE_INTELLECT"
-		"IsDisabled"				"1"	// 0 = Enabled, 1 = 10v10 disabled, 2 = fully disabled.
-
-		"Ability1"					"imba_techies_proximity_mine"
-		"Ability2"					"imba_techies_stasis_trap"
-		"Ability3"					"imba_techies_blast_off"
-		"Ability4"					"imba_techies_focused_detonate"
-		"Ability5"					"imba_techies_minefield_sign"
-		"Ability6"					"imba_techies_remote_mine"
-
-		"Ability10"					"special_bonus_imba_techies_1"
-		"Ability11"					"special_bonus_imba_techies_2"
-		"Ability12"					"special_bonus_imba_techies_3"
-		"Ability13"					"special_bonus_imba_techies_4"
-		"Ability14"					"special_bonus_imba_techies_5"
-		"Ability15"					"special_bonus_imba_techies_6"
-		"Ability16"					"special_bonus_imba_techies_7"
-		"Ability17"					"special_bonus_imba_techies_8"
-	}
-
-	//=================================================================================================================
 	// HERO: Tidehunter
 	//=================================================================================================================
 	"npc_dota_hero_tidehunter"
@@ -1746,35 +1763,6 @@
 		"Ability4"					"generic_hidden"
 		"Ability5"					"generic_hidden"
 		"Ability6"					"imba_tidehunter_ravage"
-	}
-
-	//=================================================================================================================
-	// HERO: Tinker
-	//=================================================================================================================
-	"npc_dota_hero_tinker"
-	{
-		"override_hero"				"npc_dota_hero_tinker"
-
-		//Picking Screen
-		"IsImba"					"1"
-		"AttributePrimary"			"DOTA_ATTRIBUTE_INTELLECT"
-		"IsDisabled"				"3"
-
-		"Ability1"					"imba_tinker_laser"
-		"Ability2"					"imba_tinker_heat_seeking_missile"
-		"Ability3"					"imba_tinker_march_of_the_machines"
-		"Ability4"					"imba_tinker_technomancy"
-		"Ability5"					"generic_hidden"
-		"Ability6"					"imba_tinker_rearm"
-
-		"Ability10"					"special_bonus_imba_tinker_1"
-		"Ability11"					"special_bonus_imba_tinker_2"
-		"Ability12"					"special_bonus_imba_tinker_3"
-		"Ability13"					"special_bonus_imba_tinker_4"
-		"Ability14"					"special_bonus_imba_tinker_5"
-		"Ability15"					"special_bonus_imba_tinker_6"
-		"Ability16"					"special_bonus_imba_tinker_7"
-		"Ability17"					"special_bonus_imba_tinker_8"
 	}
 
 	//=================================================================================================================
@@ -2037,7 +2025,6 @@
 
 		//Picking Screen
 		"IsCustom"					"1"
-		"IsNew"						"1"
 
 		// Abilities
 		//-------------------------------------------------------------------------------------------------------------
@@ -2127,7 +2114,6 @@
 
 		//Picking Screen
 		"IsCustom"					"1"
-		"IsNew"						"1"
 
 		// Abilities
 		//-------------------------------------------------------------------------------------------------------------
@@ -2198,6 +2184,97 @@
 	
 		//"particle_folder"			"particles/units/heroes/hero_abaddon"
 		"GameSoundsFile"			"soundevents/game_sounds_heroes_custom/game_sounds_hell_empress.vsndevts"
+		//"VoiceFile"				"soundevents/voscripts/game_sounds_vo_abaddon.vsndevts"
+	}
+
+	//=================================================================================================================
+	// HERO: Sly King // Need to be duplicated in npc_units_custom.txt
+	//=================================================================================================================
+	"npc_dota_hero_sly_king"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"BaseClass"					"npc_dota_hero_weaver"
+		"HeroID"					"117"
+		"Model"						"models/heroes/slyli/model_weaver.vmdl"
+		"ModelScale"				"0.940000"
+		//"Portrait"				"vgui/hud/heroportraits/abyssal_underlord"
+		"SoundSet"					"Hero_Weaver"
+
+		//Picking Screen
+		"IsCustom"					"1"
+		"IsNew"						"1"
+
+		// Abilities
+		//-------------------------------------------------------------------------------------------------------------
+		"Ability1"					"imba_sly_king_burrow_blast"
+		"Ability2"					"imba_sly_king_frost_gale"
+		"Ability3"					"imba_sly_king_frozen_skin"
+		"Ability4"					"generic_hidden"
+		"Ability5"					"generic_hidden"
+		"Ability6"					"imba_sly_king_winterbringer"
+
+		// Armor
+		//-------------------------------------------------------------------------------------------------------------
+		"ArmorPhysical"				"3"									// Physical protection.
+		"MagicalResistance"			"25"								// Magical protection (percentage).
+
+		// Attack
+		//-------------------------------------------------------------------------------------------------------------
+		"AttackCapabilities"		"DOTA_UNIT_CAP_MELEE_ATTACK"
+		"AttackDamageMin"			"30"							// Damage range min.
+		"AttackDamageMax"			"40"							// Damage range max.
+		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"		// Type of damage dealt. 
+		"AttackRate"				"1.700"							// Speed of attack.
+		"AttackAnimationPoint"		"0.300"							// Normalized time in animation cycle to attack.
+		"AttackAcquisitionRange"	"600"							// Range within a target can be acquired.
+		"AttackRange"				"150"							// Range within a target can be attacked.
+		"ProjectileModel"			""								// Particle system model for projectile.
+		"ProjectileSpeed"			"900"							// Speed of projectile.
+
+		// Attributes
+		//-------------------------------------------------------------------------------------------------------------
+		"AttributePrimary"			"DOTA_ATTRIBUTE_INTELLECT"	// Primary Attribute
+		"AttributeBaseStrength"		"40"						// Base strength
+		"AttributeStrengthGain"		"2.4"						// Strength bonus per level.
+		"AttributeBaseIntelligence"	"24"							// Base intelligence
+		"AttributeIntelligenceGain"	"4.1"						// Intelligence bonus per level.
+		"AttributeBaseAgility"		"26"						// Base agility
+		"AttributeAgilityGain"		"2.3"						// Agility bonus per level.
+
+		// Bounds
+		//-------------------------------------------------------------------------------------------------------------
+		"BoundsHullName"			"DOTA_HULL_SIZE_HERO"
+		"RingRadius"				"70"
+		"HealthBarOffset"			"240"
+
+		// Movement
+		//-------------------------------------------------------------------------------------------------------------
+		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_GROUND"
+		"MovementSpeed"				"325"									// Speed.
+		"MovementTurnRate"			"0.4"									// Turning rate.
+
+		// Status
+		//-------------------------------------------------------------------------------------------------------------
+		"StatusHealth"				"200"									// Base health.
+		"StatusHealthRegen"			"3.0"									// Health regeneration rate.
+		"StatusMana"				"50"									// Base mana.
+		"StatusManaRegen"			"1.0"									// Mana regeneration rate.
+
+		// Team
+		//-------------------------------------------------------------------------------------------------------------
+		"TeamName"					"DOTA_TEAM_GOODGUYS"
+		"CombatClassAttack"			"DOTA_COMBAT_CLASS_ATTACK_HERO"
+		"CombatClassDefend"			"DOTA_COMBAT_CLASS_DEFEND_HERO"
+		"UnitRelationshipClass"		"DOTA_NPC_UNIT_RELATIONSHIP_TYPE_HERO"
+
+		// Vision
+		//-------------------------------------------------------------------------------------------------------------
+		"VisionDaytimeRange"		"1800"									// Range of vision during day light.
+		"VisionNighttimeRange"		"800"									// Range of vision at night time.
+
+		//"particle_folder"			"particles/units/heroes/hero_abaddon"
+		"GameSoundsFile"			"soundevents/game_sounds_heroes_custom/game_sounds_weaver.vsndevts"
 		//"VoiceFile"				"soundevents/voscripts/game_sounds_vo_abaddon.vsndevts"
 	}
 }

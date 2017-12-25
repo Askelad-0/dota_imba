@@ -25,9 +25,6 @@ require('libraries/keyvalues')
 -- These internal libraries set up barebones's events and processes.  Feel free to inspect them/change them if you need to.
 require('internal/gamemode')
 require('internal/events')
--- These are the XP system
--- require('server/server')
-require('libraries/json')
 -- All custom constants
 require('internal/constants')
 -- This library used to handle scoreboard events
@@ -46,6 +43,9 @@ require('events')
 require('api/api')
 require('api/frontend')
 
+require('battlepass/experience')
+require('battlepass/imbattlepass')
+
 -- clientside KV loading
 require('addon_init')
 
@@ -56,12 +56,6 @@ StoreCurrentDayCycle()
 --		OverrideCreateParticle()
 --		OverrideReleaseIndex()
 --	end
-
--- storage API
---require('libraries/json')
---require('libraries/storage')
-
---Storage:SetApiKey("35c56d290cbd168b6a58aabc43c87aff8d6b39cb")
 
 function GameMode:OnItemPickedUp(event) 
 	-- If this is a hero
@@ -89,23 +83,21 @@ function GameMode:OnFirstPlayerLoaded()
 	-- IMBA: API. Preload
 	-------------------------------------------------------------------------------------------------
 	imba_api_init(function ()
-        print("API: Init data...")
+		--
+		-- Here API Data is guaranteed to be available !!!
+		--
+		PrintTable(GetTopImrUsers())
     end)
 
 	-------------------------------------------------------------------------------------------------
 	-- IMBA: Roshan and Picking Screen camera initialization
 	-------------------------------------------------------------------------------------------------
-	if GetMapName() == "imba_arena" then
-		GoodCamera = Entities:FindByName(nil, "radiant_capture_point")
-		BadCamera = Entities:FindByName(nil, "dire_capture_point")
-	else
-		GoodCamera = Entities:FindByName(nil, "dota_goodguys_fort")
-		BadCamera = Entities:FindByName(nil, "dota_badguys_fort")
+	GoodCamera = Entities:FindByName(nil, "dota_goodguys_fort")
+	BadCamera = Entities:FindByName(nil, "dota_badguys_fort")
 
-		ROSHAN_SPAWN_LOC = Entities:FindByClassname(nil, "npc_dota_roshan_spawner"):GetAbsOrigin()
-		Entities:FindByClassname(nil, "npc_dota_roshan_spawner"):RemoveSelf()
-		local roshan = CreateUnitByName("npc_imba_roshan", ROSHAN_SPAWN_LOC, true, nil, nil, DOTA_TEAM_NEUTRALS)
-	end
+	ROSHAN_SPAWN_LOC = Entities:FindByClassname(nil, "npc_dota_roshan_spawner"):GetAbsOrigin()
+	Entities:FindByClassname(nil, "npc_dota_roshan_spawner"):RemoveSelf()
+	local roshan = CreateUnitByName("npc_imba_roshan", ROSHAN_SPAWN_LOC, true, nil, nil, DOTA_TEAM_NEUTRALS)
 
 	-------------------------------------------------------------------------------------------------
 	-- IMBA: Pre-pick forced hero selection
@@ -117,6 +109,17 @@ function GameMode:OnFirstPlayerLoaded()
 	-------------------------------------------------------------------------------------------------
 	-- IMBA: Contributor models
 	-------------------------------------------------------------------------------------------------
+
+	for _, amphibian in pairs(Entities:FindAllByName("imbamphibian2")) do
+		local imbamphibian = CreateUnitByName("npc_imba_amphibian", amphibian:GetAbsOrigin(), true, nil, nil, 2)
+		imbamphibian:SetForwardVector(Vector(1, 1, 0):Normalized())
+		imbamphibian:AddNewModifier(imbamphibian, nil, "modifier_imba_amphibian", {})
+	end
+	for _, amphibian in pairs(Entities:FindAllByName("imbamphibian3")) do
+		local imbamphibian = CreateUnitByName("npc_imba_amphibian", amphibian:GetAbsOrigin(), true, nil, nil, 3)
+		imbamphibian:SetForwardVector(Vector(1, 1, 0):Normalized())
+		imbamphibian:AddNewModifier(imbamphibian, nil, "modifier_imba_amphibian", {})
+	end
 
 	-- Contributor statue list
 	local contributor_statues = {
@@ -333,7 +336,6 @@ function GameMode:ModifierFilter( keys )
 		-- Roshan special modifier rules
 		-------------------------------------------------------------------------------------------------
 		if IsRoshan(modifier_owner) then
-
 			-- Ignore stuns
 			if modifier_name == "modifier_stunned" then
 				return false
@@ -389,12 +391,16 @@ function GameMode:ModifierFilter( keys )
 				end
 
 				if modifier_owner:GetTeam() ~= modifier_caster:GetTeam() and keys.duration > 0 then
-					
 					if IsVanillaSilence(modifier_name) or IsImbaSilence(modifier_name) then						
-					
 						-- if reduction is 1 (or more), the modifier is completely ignored
 						if silence_reduction_pct >= 1 then
 							SendOverheadEventMessage(nil, OVERHEAD_ALERT_LAST_HIT_MISS, modifier_owner, 0, nil)
+							return false
+						else
+							keys.duration = keys.duration * (1 - silence_reduction_pct)
+						end
+					elseif IsSilentSilence(modifier_name) then
+						if silence_reduction_pct >= 1 then
 							return false
 						else
 							keys.duration = keys.duration * (1 - silence_reduction_pct)
@@ -443,17 +449,42 @@ function GameMode:ModifierFilter( keys )
 			end
 		end
 
-		if modifier_name == "modifier_courier_shield" then
-			modifier_caster:RemoveModifierByName(modifier_name)
-			modifier_caster:FindAbilityByName("courier_burst"):CastAbility()
-		end
+--		if modifier_name == "modifier_courier_shield" then
+--			modifier_caster:RemoveModifierByName(modifier_name)
+--			modifier_caster:FindAbilityByName("courier_burst"):CastAbility()
+--		end
+
+		-- disarm immune
+		local jarnbjorn_immunity = {
+			"modifier_item_imba_triumvirate_proc_debuff",
+			"modifier_item_imba_sange_azura_proc",
+			"modifier_item_imba_sange_yasha_disarm",
+			"modifier_item_imba_heavens_halberd_active_disarm",
+			"modifier_item_imba_sange_disarm",
+			"modifier_imba_angelic_alliance_debuff",
+			"modifier_imba_overpower_disarm",
+			"modifier_imba_silencer_last_word_debuff",
+			"modifier_imba_hurl_through_hell_disarm",
+			"modifier_imba_frost_armor_freeze",
+			"modifier_dismember_disarm",
+			"modifier_imba_decrepify",
+
+--			"modifier_imba_faceless_void_time_lock_stun",
+--			"modifier_bashed",
+		}
 
 		-- add particle or sound playing to notify
 		if modifier_owner:HasModifier("modifier_item_imba_jarnbjorn_static") then
-			if modifier_name == "modifier_item_imba_triumvirate_proc_debuff" or modifier_name == "modifier_item_imba_sange_azura_proc" or modifier_name == "modifier_item_imba_sange_yasha_disarm" or modifier_name == "modifier_item_imba_heavens_halberd_active_disarm" or modifier_name == "modifier_item_imba_sange_disarm" or modifier_name == "modifier_imba_angelic_alliance_debuff" or modifier_name == "modifier_imba_overpower_disarm" or modifier_name == "modifier_imba_silencer_last_word_debuff" or modifier_name == "modifier_imba_hurl_through_hell_disarm" or modifier_name == "modifier_imba_frost_armor_freeze" or modifier_name == "modifier_dismember_disarm" or modifier_name == "modifier_imba_decrepify" then
-				SendOverheadEventMessage(nil, OVERHEAD_ALERT_EVADE, modifier_owner, 0, nil)
-				return false
+			for _, modifier in pairs(jarnbjorn_immunity) do
+				if modifier_name == modifier then
+					SendOverheadEventMessage(nil, OVERHEAD_ALERT_EVADE, modifier_owner, 0, nil)
+					return false
+				end
 			end
+		end
+
+		if modifier_name == "modifier_fountain_aura_buff" then
+			modifier_owner:AddNewModifier(modifier_owner, nil, "modifier_imba_fountain_particle_control", {})
 		end
 
 		return true
@@ -476,10 +507,14 @@ function GameMode:ItemAddedFilter( keys )
 		item_name = item:GetName()
 	end
 
+	if string.find(item_name, "item_imba_rune_") and unit:IsRealHero() then
+		PickupRune(item_name, unit)
+		return false
+	end
+
 	-------------------------------------------------------------------------------------------------
 	-- Aegis of the Immortal pickup logic
 	-------------------------------------------------------------------------------------------------
-
 	if item_name == "item_imba_aegis" then
 		-- If this is a player, do Aegis stuff
 		if unit:IsRealHero() and not unit:HasModifier("modifier_item_imba_aegis") then
@@ -511,7 +546,6 @@ function GameMode:ItemAddedFilter( keys )
 	-------------------------------------------------------------------------------------------------
 	-- Rapier pickup logic
 	-------------------------------------------------------------------------------------------------
-
 	if item.IsRapier then
 		if item.rapier_pfx then
 			ParticleManager:DestroyParticle(item.rapier_pfx, false)
@@ -620,12 +654,12 @@ function GameMode:OrderFilter( keys )
 		return true
 	end
 
-	if keys.order_type == DOTA_UNIT_ORDER_CAST_NO_TARGET then
-		local ability = EntIndexToHScript(keys["entindex_ability"])
-		if unit:IsRealHero() then
-			local companions = FindUnitsInRadius(unit:GetTeamNumber(), Vector(0, 0, 0), nil, FIND_UNITS_EVERYWHERE, DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_ALL, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES + DOTA_UNIT_TARGET_FLAG_INVULNERABLE, FIND_ANY_ORDER, false)
-			for _, companion in pairs(companions) do
-				if companion:GetUnitName() == "npc_imba_donator_companion" and companion:GetOwner() == unit then
+--	if keys.order_type == DOTA_UNIT_ORDER_CAST_NO_TARGET then
+--		local ability = EntIndexToHScript(keys["entindex_ability"])
+--		if unit:IsRealHero() then
+--			local companions = FindUnitsInRadius(unit:GetTeamNumber(), Vector(0, 0, 0), nil, FIND_UNITS_EVERYWHERE, DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_ALL, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES + DOTA_UNIT_TARGET_FLAG_INVULNERABLE, FIND_ANY_ORDER, false)
+--			for _, companion in pairs(companions) do
+--				if companion:GetUnitName() == "npc_imba_donator_companion" and companion:GetOwner() == unit then
 --					if ability:GetAbilityName() == "slark_pounce" then
 --						local ab = companion:AddAbility(ability:GetAbilityName())
 --						ab:SetLevel(1)
@@ -635,10 +669,10 @@ function GameMode:OrderFilter( keys )
 --							companion:RemoveAbility(ab:GetAbilityName())
 --						end)
 --					end
-				end
-			end
-		end
-	end
+--				end
+--			end
+--		end
+--	end
 
 	-- Voice lines
 	if keys.order_type == DOTA_UNIT_ORDER_ATTACK_TARGET then
@@ -1088,39 +1122,7 @@ function GameMode:DamageFilter( keys )
 				end
 			end
 		end
-		
-		-- Juggernaut Deflect kill credit
-		if victim:HasModifier("modifier_imba_juggernaut_blade_fury_deflect_on_kill_credit") then
-			-- Check if this is the killing blow
-			local victim_health = victim:GetHealth()
-			local blade_fury_modifier = victim:FindModifierByName("modifier_imba_juggernaut_blade_fury_deflect_on_kill_credit")
-			if keys.damage >= victim_health then
-				-- Prevent death and trigger Reaper's Scythe's on-kill effects
-				local blade_fury_caster = false
-				local blade_fury_ability = false
-				if blade_fury_modifier then
-					blade_fury_caster = blade_fury_modifier:GetCaster()
-					blade_fury_ability = blade_fury_modifier:GetAbility()
-				end
-				if blade_fury_caster then
-					keys.damage = 0
 
-					-- Find the Reaper's Scythe ability
-					local scythe_ability = blade_fury_caster:FindModifierByName("modifier_imba_reapers_scythe")
-					if scythe_ability then return nil end
-			
-					-- Prevent denying when other sources of damage occurs
-					local blade_fury_damager = blade_fury_caster:FindAbilityByName("imba_juggernaut_blade_fury")
-					if not blade_fury_damager then return nil end
-			
-					-- if not attacker then return nil end
-					blade_fury_modifier:Destroy()
-					-- Attempt to kill the target, crediting it to the caster of Reaper's Scythe
-					ApplyDamage({attacker = blade_fury_caster, victim = victim, ability = blade_fury_ability, damage = victim:GetHealth() + 10, damage_type = DAMAGE_TYPE_PURE, damage_flag = DOTA_DAMAGE_FLAG_NO_DAMAGE_MULTIPLIERS + DOTA_DAMAGE_FLAG_BYPASSES_BLOCK})
-				end
-			end
-		end
-	
 		-- Kunkka Oceanids Blessing talent damage negation, applying true PURE damage towards the target
 		if victim:HasModifier("modifier_imba_tidebringer_cleave_hit_target") then
 			local tidebringer_ability = attacker:FindAbilityByName("imba_kunkka_tidebringer")
@@ -1275,16 +1277,19 @@ end
 	is useful for starting any game logic timers/thinkers, beginning the first round, etc.									]]
 function GameMode:OnGameInProgress()
 
+	Timers:CreateTimer(0, function()
+		SpawnImbaRunes()
+		return RUNE_SPAWN_TIME
+	end)
+
 	-------------------------------------------------------------------------------------------------
 	-- IMBA: Passive gold adjustment
 	-------------------------------------------------------------------------------------------------
-	
 	GameRules:SetGoldTickTime( GOLD_TICK_TIME[GetMapName()] )
 
 	-------------------------------------------------------------------------------------------------
 	-- IMBA: Arena mode initialization
 	-------------------------------------------------------------------------------------------------
-
 	if GetMapName() == "imba_arena" then
 
 		-- Define the bonus gold positions
@@ -1786,7 +1791,7 @@ local count = 0
 --	end
 	Notifications:TopToAll({text="Critical lags! All creeps have been removed: "..count, duration=10.0})
 end
-
+--[[
 function GameMode:ProcessItemForLootExpire( item, flCutoffTime )
 	if item:IsNull() then
 		return false
@@ -1806,3 +1811,4 @@ function GameMode:ProcessItemForLootExpire( item, flCutoffTime )
 	UTIL_RemoveImmediate( item )
 	return false
 end
+--]]

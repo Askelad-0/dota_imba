@@ -26,7 +26,6 @@ function GameMode:OnDisconnect(keys)
 	-- If the game hasn't started, or has already ended, do nothing
 	if (GameRules:State_Get() >= DOTA_GAMERULES_STATE_POST_GAME) or (GameRules:State_Get() < DOTA_GAMERULES_STATE_PRE_GAME) then
 		return nil
-
 	-- Else, start tracking player's reconnect/abandon state
 	else
 		-- Fetch player's player and hero information
@@ -38,6 +37,7 @@ function GameMode:OnDisconnect(keys)
 
 		-- Start tracking
 		print("started keeping track of player "..player_id.."'s connection state")
+		ApiPrint("Player " .. tostring(PlayerResource:GetSteamID(player_id)) .. " disconnected.");
 		local disconnect_time = 0
 		Timers:CreateTimer(1, function()
 			
@@ -52,6 +52,7 @@ function GameMode:OnDisconnect(keys)
 				Notifications:BottomToAll({text = "#imba_player_abandon_message", duration = line_duration, style = {color = "DodgerBlue"}, continue = true})
 				PlayerResource:SetHasAbandonedDueToLongDisconnect(player_id, true)
 				print("player "..player_id.." has abandoned the game.")
+				ApiPrint("Player " .. tostring(PlayerResource:GetSteamID(player_id)) .. " has abandoned the game.");
 
 				-- Decrease the player's team's player count
 				PlayerResource:DecrementTeamPlayerCount(player_id)
@@ -91,9 +92,9 @@ end
 
 -- The overall game state has changed
 function GameMode:OnGameRulesStateChange(keys)
-    DebugPrint("[BAREBONES] GameRules State Changed")
-    DebugPrintTable(keys)
-    --	local i = 10
+	DebugPrint("[BAREBONES] GameRules State Changed")
+	DebugPrintTable(keys)
+	--	local i = 10
 
 	-- This internal handling is used to set up main barebones functions
 	GameMode:_OnGameRulesStateChange(keys)
@@ -111,7 +112,9 @@ function GameMode:OnGameRulesStateChange(keys)
 --		end
 
 		if PlayerResource:GetPlayerCount() < 10 then
-			CHEAT_ENABLED = true
+			if not IsInToolsMode() then
+				CHEAT_ENABLED = true
+			end
 		end
 	end
 
@@ -157,6 +160,9 @@ function GameMode:OnGameRulesStateChange(keys)
 --			return 1.0
 --		end)
 
+		-- Initialize Battle Pass
+		Imbattlepass:Init()
+
 		-- Shows various info to devs in pub-game to find lag issues
 		ImbaNetGraph(10.0)
 
@@ -173,10 +179,10 @@ function GameMode:OnGameRulesStateChange(keys)
 			-- fix to setup flying courier speed, volvo black magic reset it to 450
 			if GameRules:GetDOTATime(false, false) > 180 then
 				for _, courier in pairs(IMBA_COURIERS) do
-		 			if not courier:HasModifier("modifier_courier_hack") then
-		 				courier:AddNewModifier(courier, nil, "modifier_courier_hack", {})
-		 			end
-		 		end
+					if not courier:HasModifier("modifier_courier_hack") then
+						courier:AddNewModifier(courier, nil, "modifier_courier_hack", {})
+					end
+				end
 			end
 
 			-- fix for super high respawn time
@@ -205,10 +211,8 @@ function GameMode:OnGameRulesStateChange(keys)
 	-------------------------------------------------------------------------------------------------
 	-- IMBA: Game started (horn sounded)
 	-------------------------------------------------------------------------------------------------
-    if new_state == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
-        
-        ApiPrint("Entering Game in progress / horn")
-
+	if new_state == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
+		ApiPrint("Entering Game in progress / horn")
 		CountGameIXP()
 
 		for _, hero in pairs(HeroList:GetAllHeroes()) do
@@ -226,42 +230,57 @@ function GameMode:OnGameRulesStateChange(keys)
 			return 60
 		end)
 
-		if RandomInt(1, 100) > 25 then
-			Timers:CreateTimer(RandomInt(5, 10) * 60, function()
-				if CHEAT_ENABLED == false then
-					local pos = {}
-					pos[1] = Vector(6446, -6979, 1496)
-					pos[2] = Vector(RandomInt(-6000, 0), RandomInt(7150, 7300), 1423)
-					pos[3] = Vector(RandomInt(-1000, 2000), RandomInt(6900, 7200), 1440)
-					pos[4] = Vector(7041, -6263, 1461)
-					local pos = pos[4]
+		if GetMapName() ~= "imba_standard" then
+			if RandomInt(1, 100) > 25 then
+				Timers:CreateTimer(RandomInt(5, 10) * 60, function()
+					if CHEAT_ENABLED == false then
+						local pos = {}
+						pos[1] = Vector(6446, -6979, 1496)
+						pos[2] = Vector(RandomInt(-6000, 0), RandomInt(7150, 7300), 1423)
+						pos[3] = Vector(RandomInt(-1000, 2000), RandomInt(6900, 7200), 1440)
+						pos[4] = Vector(7041, -6263, 1461)
+						local pos = pos[4]
 
-					GridNav:DestroyTreesAroundPoint(pos, 80, false)
-					local item = CreateItem("item_the_caustic_finale", nil, nil)
-					local drop = CreateItemOnPositionSync(pos, item)
-				end
-			end)
+						GridNav:DestroyTreesAroundPoint(pos, 80, false)
+						local item = CreateItem("item_the_caustic_finale", nil, nil)
+						local drop = CreateItemOnPositionSync(pos, item)
+					end
+				end)
+			end
 		end
 	end
 
 	if new_state == DOTA_GAMERULES_STATE_POST_GAME then
-        -- call imba api
-        ApiPrint("Entering post game")
-        imba_api_game_complete(function (players) 
-            -- do sth with the players new xp + imr
-            -- accessing xp would be
-            local playersXp = players[steamIdOfPlayer].xp 
-        end)
+		-- call imba api
+		ApiPrint("Entering post game")
 
-		CustomGameEventManager:Send_ServerToAllClients("end_game", {})
-		SetPlayerInfoXP()
+		imba_api_game_complete(function (players)
+			print("Sending new XP / IMR values to clients")
+			Timers:CreateTimer(function()
+				for ID = 0, PlayerResource:GetPlayerCount() -1 do
+					print("XP DIFF:", players[tostring(PlayerResource:GetSteamID(ID))].xp_diff)
+					print("IMR DIFF:", players[tostring(PlayerResource:GetSteamID(ID))].imr_5v5_diff)
+					CustomNetTables:SetTableValue("player_table", tostring(ID), {
+						XP = CustomNetTables:GetTableValue("player_table", tostring(ID)).XP,
+						MaxXP = CustomNetTables:GetTableValue("player_table", tostring(ID)).MaxXP,
+						Lvl = CustomNetTables:GetTableValue("player_table", tostring(ID)).Lvl,
+						title = CustomNetTables:GetTableValue("player_table", tostring(ID)).title,
+						title_color = CustomNetTables:GetTableValue("player_table", tostring(ID)).title_color,
+						XP_change = players[tostring(PlayerResource:GetSteamID(ID))].xp_diff,
+						IMR_5v5 = CustomNetTables:GetTableValue("player_table", tostring(ID)).IMR_5v5,
+						IMR_5v5_change = players[tostring(PlayerResource:GetSteamID(ID))].imr_5v5_diff,
+					})
+					return 1.0 -- we can keep it endless since it's end-game
+				end
+				CustomGameEventManager:Send_ServerToAllClients("end_game", {})
+			end)
+--			CustomGameEventManager:Send_ServerToAllClients("end_game", players)
+		end)
 
 		for _, hero in pairs(HeroList:GetAllHeroes()) do
 			if hero:GetTeamNumber() == GAME_WINNER_TEAM then
-				print("WINNING! YAY:", GAME_WINNER_TEAM)
 				HeroVoiceLine(hero, "win")
 			else
-				print("LOSING! OH NOES:", GAME_WINNER_TEAM)
 				HeroVoiceLine(hero, "lose")
 			end
 		end
@@ -276,20 +295,65 @@ local npc = EntIndexToHScript(keys.entindex)
 local normal_xp = npc:GetDeathXP()
 
 	if npc then
-		if GetMapName() == "imba_10v10" or GetMapName() == "imba_custom_10v10" then
-			npc:SetDeathXP(normal_xp)
-		else
-			npc:SetDeathXP(normal_xp*1.5)
-		end
-
 --		npc:AddNewModifier(npc, nil, "modifier_river", {})
 
+		if RandomInt(1, 100) > 85 then
+			if string.find(npc:GetUnitName(), "dota_creep") then
+				local material_group = tostring(RandomInt(0, 8))
+				npc.is_greevil = true
+				if string.find(npc:GetUnitName(), "ranged") then
+					npc:SetModel("models/courier/greevil/greevil_flying.vmdl")
+					npc:SetOriginalModel("models/courier/greevil/greevil_flying.vmdl")
+				else
+					npc:SetModel("models/courier/greevil/greevil.vmdl")
+					npc:SetOriginalModel("models/courier/greevil/greevil.vmdl")
+				end
+				npc:SetMaterialGroup(material_group)
+				npc.eyes = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/courier/greevil/greevil_eyes.vmdl"})
+				npc.ears = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/courier/greevil/greevil_ears"..RandomInt(1, 2)..".vmdl"})
+				if RandomInt(1, 100) > 80 then
+					npc.feathers = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/courier/greevil/greevil_feathers.vmdl"})
+					npc.feathers:FollowEntity(npc, true)
+				end
+				npc.hair = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/courier/greevil/greevil_hair"..RandomInt(1, 2)..".vmdl"})
+				npc.horns = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/courier/greevil/greevil_horns"..RandomInt(1, 4)..".vmdl"})
+				npc.nose = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/courier/greevil/greevil_nose"..RandomInt(1, 3)..".vmdl"})
+				npc.tail = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/courier/greevil/greevil_tail"..RandomInt(1, 4)..".vmdl"})
+				npc.teeth = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/courier/greevil/greevil_teeth"..RandomInt(1, 4)..".vmdl"})
+				npc.wings = SpawnEntityFromTableSynchronous("prop_dynamic", {model = "models/courier/greevil/greevil_wings"..RandomInt(1, 4)..".vmdl"})
+
+				-- lock to bone
+				npc.eyes:SetMaterialGroup(material_group)
+				npc.eyes:FollowEntity(npc, true)
+				npc.ears:SetMaterialGroup(material_group)
+				npc.ears:FollowEntity(npc, true)
+				npc.hair:FollowEntity(npc, true)
+				npc.horns:SetMaterialGroup(material_group)
+				npc.horns:FollowEntity(npc, true)
+				npc.nose:SetMaterialGroup(material_group)
+				npc.nose:FollowEntity(npc, true)
+				npc.tail:SetMaterialGroup(material_group)
+				npc.tail:FollowEntity(npc, true)
+				npc.teeth:SetMaterialGroup(material_group)
+				npc.teeth:FollowEntity(npc, true)
+				npc.wings:SetMaterialGroup(material_group)
+				npc.wings:FollowEntity(npc, true)
+			elseif string.find(npc:GetUnitName(), "_siege") then
+				npc:SetModel("models/creeps/mega_greevil/mega_greevil.vmdl")
+				npc:SetOriginalModel("models/creeps/mega_greevil/mega_greevil.vmdl")
+				npc:SetModelScale(2.75)
+			end
+		end
+
 		-- Valve Illusion bug to prevent respawning
-		if npc:IsIllusion() or npc:IsTempestDouble() then
+		if npc:IsIllusion() and not npc:HasModifier("modifier_illusion_manager_out_of_world") then
 			if npc.illusion == true then
 				UTIL_Remove(npc)
 			end
 			npc.illusion = true
+			return
+		elseif npc:IsTempestDouble() then
+			UTIL_Remove(npc)
 			return
 		end
 
@@ -306,30 +370,30 @@ local normal_xp = npc:GetDeathXP()
 			if not npc.first_spawn then
 				npc.first_spawn = true
 				table.insert(IMBA_COURIERS, npc)
-				if npc:FindAbilityByName("courier_burst"):GetLevel() ~= 1 then
-					npc:FindAbilityByName("courier_burst"):SetLevel(1)
-				end
+--				if npc:FindAbilityByName("courier_burst"):GetLevel() ~= 1 then
+--					npc:FindAbilityByName("courier_burst"):SetLevel(1)
+--				end
 			end
 			npc:AddNewModifier(npc, nil, "modifier_imba_speed_limit_break", {})
 		end
 
-		if npc:IsRealHero() and npc:GetUnitName() ~= "npc_dota_hero_wisp" or npc.is_real_wisp then
-			if not npc.has_label then
-				Timers:CreateTimer(5.0, function()
-					local title = GetTitleIXP(npc:GetPlayerID())
-					local rgb = GetTitleColorIXP(title)
-					npc:SetCustomHealthLabel(title, rgb[1], rgb[2], rgb[3])
-				end)
-				npc.has_label = true
-			end
-		elseif npc:IsIllusion() then
-			if not npc.has_label then
-				local title = GetTitleIXP(npc:GetPlayerID())
-				local rgb = GetTitleColorIXP(title)
-				npc:SetCustomHealthLabel(title, rgb[1], rgb[2], rgb[3])
-				npc.has_label = true
-			end
-		end
+--		if npc:IsRealHero() and npc:GetUnitName() ~= "npc_dota_hero_wisp" or npc.is_real_wisp then
+--			if not npc.has_label then
+--				Timers:CreateTimer(5.0, function()
+--					local title = GetTitleIXP(npc:GetPlayerID())
+--					local rgb = GetTitleColorIXP(title)
+--					npc:SetCustomHealthLabel(title, rgb[1], rgb[2], rgb[3])
+--				end)
+--				npc.has_label = true
+--			end
+--		elseif npc:IsIllusion() then
+--			if not npc.has_label then
+--				local title = GetTitleIXP(npc:GetPlayerID())
+--				local rgb = GetTitleColorIXP(title)
+--				npc:SetCustomHealthLabel(title, rgb[1], rgb[2], rgb[3])
+--				npc.has_label = true
+--			end
+--		end
 	end
 
 	if npc:GetUnitName() == "npc_dummy_unit" or npc:GetUnitName() == "npc_dummy_unit_perma" then
@@ -1027,7 +1091,7 @@ function GameMode:OnEntityKilled( keys )
 			-- if BUYBACK_COOLDOWN_ENABLED and game_time > BUYBACK_COOLDOWN_START_POINT then
 			-- 	buyback_cooldown = math.min(BUYBACK_COOLDOWN_GROW_FACTOR * (game_time - BUYBACK_COOLDOWN_START_POINT), BUYBACK_COOLDOWN_MAXIMUM)
 			-- end
-			buyback_cooldown = 60
+			buyback_cooldown = 90
 
 			-- #7 Talent Vengeful Spirit - Decreased respawn time & cost
 			if killed_unit:HasTalent("special_bonus_imba_vengefulspirit_7") then

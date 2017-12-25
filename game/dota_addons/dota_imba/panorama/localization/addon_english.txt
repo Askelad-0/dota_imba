@@ -27,6 +27,7 @@
 	"scoreboard_tool_tip_active_share_unit_hero"	"(SHARED)"
 	"scoreboard_tool_tip_disable_help"				"Disable Help"
 	"scoreboard_tool_tip_active_disable_help"		"(DISABLED)"
+	"custom_end_screen_legend_imr"					"IMR"
 
 	"lag_issues"									"Dota 2 IMBA website"
 
@@ -39,7 +40,7 @@
 	"hero_name_filler"				"Lock In"
 	"team_title_radiant"			"The Radiant"
 	"team_title_dire"				"The Dire"
-	"average_mmr"					"Average Imba Level: "
+	"average_mmr"					"Average IMR: "
 	"swap_vanilla_to_custom"		"Swap to Vanilla Heroes"
 	"swap_custom_to_vanilla"		"Swap to Custom Heroes"
 	"stats_swap"					"Toggle Stats Panel"
@@ -55,9 +56,73 @@
 	"picked_hero"					"Picked"
 	"imba_hero"						"Imba"
 	"vanilla_hero"					"Lazy"
+	"close_picking_screen"			"Force-close Picking Screen"
+
 
 	//Leaderboard
+	"leaderboard"					"Leaderboard"
 	"leaderboard_loading"			"Loading leaderboard, please wait"
+	"leaderboard_rank"				"Rank"
+	"leaderboard_steam_avatar"		"Steam"
+	"leaderboard_xp"				"Experience (click to sort)"
+	"leaderboard_imr"				"Imba Match Rank"
+
+	//blue
+	//nature
+	//water
+	//snow
+	//gold
+	//red/Fire
+	//purple
+
+	//Battlepass
+	"imba_game_info"				"Imba Game Info"
+	"imba_game_info_close"			"Close"
+	"battlepass"					"Battlepass"
+	"coming_soon"					"Upcoming feature: being able to choose reward"
+	"battlepass_reward_locked"		"Locked!"
+	"battlepass_level"				"Level: "
+	"battlepass_blink"				"Light Blue Blink"
+	"battlepass_blink2"				"Nature Blink"
+	"battlepass_blink3"				"Water Blink"
+	"battlepass_blink4"				"Water Blink 2"
+	"battlepass_blink5"				"Snow Blink"
+	"battlepass_blink6"				"Gold Blink"
+	"battlepass_blink7"				"Gold Blink 2"
+	"battlepass_blink8"				"Red Blink"
+	"battlepass_blink9"				"Red Blink 2"
+	"battlepass_blink10"			"Purple Blink"
+	"battlepass_force_staff"		"Nature Force Staff"
+	"battlepass_force_staff2"		"Water Force Staff"
+	"battlepass_force_staff3"		"Snow Force Staff"
+	"battlepass_force_staff4"		"Red Force Staff"
+	"battlepass_radiance"			"Water Radiance"
+	"battlepass_radiance2"			"Red Radiance"
+	"battlepass_sheepstick"			"Blue Pig Sheepstick"
+	"battlepass_sheepstick2"		"Bird Sheepstick"
+	"battlepass_shiva"				"Water Shiva"
+	"battlepass_shiva2"				"Fire Shiva"
+	"battlepass_mekansm"			"Water Mekansm"
+	"battlepass_mekansm2"			"Red Mekansm"
+	"battlepass_fountain"			"Nature Fountain"
+	"battlepass_fountain2"			"Nature Fountain 2"
+	"battlepass_fountain3"			"Nature Fountain 3"
+	"battlepass_fountain4"			"Water Fountain"
+	"battlepass_fountain5"			"Water Fountain 2"
+	"battlepass_fountain6"			"Water Fountain 3"
+	"battlepass_fountain7"			"Snow Fountain"
+	"battlepass_fountain8"			"Snow Fountain 2"
+	"battlepass_fountain9"			"Snow Fountain 3"
+	"battlepass_fountain10"			"Gold Fountain"
+	"battlepass_fountain11"			"Gold Fountain 2"
+	"battlepass_fountain12"			"Red Fountain"
+	"battlepass_fountain13"			"Red Fountain 2"
+	"battlepass_fountain14"			"Red Fountain 3"
+	"battlepass_fountain15"			"Purple Fountain"
+	"battlepass_bottle"				"Water Bottle"
+	"battlepass_bottle2"			"Gold Bottle"
+	"battlepass_bottle3"			"Red Bottle"
+	"battlepass_bottle4"			"Purple Bottle"
 
 	//=================================================================================================================
 	// Generic talent names
@@ -596,22 +661,22 @@
 	"DOTA_Tooltip_Talent_special_bonus_imba_obsidian_destroyer_8_Description"   "When the Mana Restored from Essence Aura exceeds Outworld Devourer's Mana Pool, Outworld Devourer gains Max Mana according to the excess amount of Mana Restored. Each instance of Obsidiance lasts 6 seconds.<br><br><i>Each person's negative essence is linked towards the darkness which the Outworld Devourer resides. The abyss of Obsidiance.</i>"
 
 	// Pudge
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_1_title"                      "Rottest Rot"
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_1_Description"                "For every 5% health Pudge misses Rot deals 40 damage per second extra."
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_2_title"                      "Meat Shield"
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_2_Description"                "Pudge temporarily uses 5 stacks of Flesh Heap to block 100 damage from attacks. Theyr return in 10 seconds."
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_3_title"                      "Magic Rumination"
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_3_Description"                "Pudge gains 0.75% spell lifesteal per Flesh Heap stack."
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_4_title"                      "Cleaver Feeder"
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_4_Description"                "All damage dealt to a unit under the cleaver effect is fully lifestealed by Pudge. Stacks with other sources of lifesteal."
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_5_title"                      "True Cleaver"
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_5_Description"                "Pudge throws his cleaver so hard it doesn't stop at the first unit it hits."
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_6_title"                      "Weapon Butchery"
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_6_Description"                "Dismember disarms the target after being released for as long as it was butchered."
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_7_title"                      "Eco Butcher"
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_7_Description"                "Meat hook now destroys trees, for every tree a unit passes through it deals 120 bonus physical damage."
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_8_title"                      "Triple Hook"
-	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_8_Description"                "Pudge throws 3 hooks instead of one, with 30 degrees between them. Those hooks can't thit the same target."
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_1_title"                      "Mighty Hook"
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_1_Description"                "Meat Hook gains 10 stacks of Power and Swift."
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_2_title"                      "Zoom Hook"
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_2_Description"                "Increase Pudge Meat Hook's speed by 300 (1750 speed)."
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_3_title"                      "Fat Hook"
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_3_Description"                "Increase Pudge Meat Hook's width by 100 (200 width)."
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_4_title"                      "Fat Boy"
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_4_Description"                "Increase He's a big guy (not you) max stacks by 10."
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_5_title"                      "Rage Quit"
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_5_Description"                "Increase Meat Hook's range by +2500."
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_6_title"                      "Rot"
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_6_Description"                "Increase Rot damage by 90."
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_7_title"                      "Bloody Period"
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_7_Description"                "Meat Hook applies Rupture while the hook is returning, dealing 10% of the distance travelled as damage."
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_8_title"                      "Fresh Meal"
+	"DOTA_Tooltip_Talent_special_bonus_imba_pudge_8_Description"                "Increase Dismember duration by +2 seconds."
 
 	//QoP
 	// Queen of Pain

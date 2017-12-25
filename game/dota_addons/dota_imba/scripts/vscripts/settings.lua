@@ -1,10 +1,4 @@
 -------------------------------------------------------------------------------------------------
--- IMBA: Game settings
--------------------------------------------------------------------------------------------------
-
-IMBA_VERSION = "7.01"						-- Tracks game version
-
--------------------------------------------------------------------------------------------------
 -- Barebones basics
 -------------------------------------------------------------------------------------------------
 
@@ -18,14 +12,17 @@ if IsInToolsMode() then HERO_SELECTION_TIME = 10.0 end
 
 PRE_GAME_TIME = 90.0 + HERO_SELECTION_TIME	-- How long after people select their heroes should the horn blow and the game start?
 POST_GAME_TIME = 60.0						-- How long should we let people look at the scoreboard before closing the server automatically?
-AUTO_LAUNCH_DELAY = 15.0					-- How long should we wait for the host to setup the game, after all players have loaded in?
+AUTO_LAUNCH_DELAY = 3.0					-- How long should we wait for the host to setup the game, after all players have loaded in?
+if GetMapName() == "imba_frantic_10v10" then
+	AUTO_LAUNCH_DELAY = 10.0
+end
 TREE_REGROW_TIME = 180.0					-- How long should it take individual trees to respawn after being cut down/destroyed?
 SHOWCASE_TIME = 0.0							-- How long should showcase time last?
 STRATEGY_TIME = 0.0							-- How long should strategy time last?
 
 GOLD_PER_TICK = 1							-- How much gold should players get per tick?
 
-RECOMMENDED_BUILDS_DISABLED = true			-- Should we disable the recommened builds for heroes
+RECOMMENDED_BUILDS_DISABLED = false			-- Should we disable the recommened builds for heroes
 CAMERA_DISTANCE_OVERRIDE = -1				-- How far out should we allow the camera to go?  1134 is the default in Dota
 
 MINIMAP_ICON_SIZE = 1						-- What icon size should we use for our heroes?
@@ -89,6 +86,7 @@ FULL_ABANDON_TIME = 15														-- Time for a team to be considered as havin
 GAME_ROSHAN_KILLS = 0														-- Tracks amount of Roshan kills
 ROSHAN_RESPAWN_TIME = RandomInt(2, 4) * 60									-- Roshan respawn timer (in seconds)
 AEGIS_DURATION = 300														-- Aegis expiration timer (in seconds)
+GAME_COUNT_DELAY = 600 -- wait 10 min before being able to earn xp
 
 IMBA_DAMAGE_EFFECTS_DISTANCE_CUTOFF = 2500									-- Range at which most on-damage effects no longer trigger
 
@@ -140,14 +138,6 @@ USE_CUSTOM_TEAM_COLORS_FOR_PLAYERS = false									-- Should we use custom team 
 TEAM_COLORS = {}															-- If USE_CUSTOM_TEAM_COLORS is set, use these colors.
 TEAM_COLORS[DOTA_TEAM_GOODGUYS] = { 61, 210, 150 }							-- Teal
 TEAM_COLORS[DOTA_TEAM_BADGUYS]  = { 243, 201, 9 }							-- Yellow
-TEAM_COLORS[DOTA_TEAM_CUSTOM_1] = { 197, 77, 168 }							-- Pink
-TEAM_COLORS[DOTA_TEAM_CUSTOM_2] = { 255, 108, 0 }							-- Orange
-TEAM_COLORS[DOTA_TEAM_CUSTOM_3] = { 52, 85, 255 }							-- Blue
-TEAM_COLORS[DOTA_TEAM_CUSTOM_4] = { 101, 212, 19 }							-- Green
-TEAM_COLORS[DOTA_TEAM_CUSTOM_5] = { 129, 83, 54 }							-- Brown
-TEAM_COLORS[DOTA_TEAM_CUSTOM_6] = { 27, 192, 216 }							-- Cyan
-TEAM_COLORS[DOTA_TEAM_CUSTOM_7] = { 199, 228, 13 }							-- Olive
-TEAM_COLORS[DOTA_TEAM_CUSTOM_8] = { 140, 42, 244 }							-- Purple
 
 PLAYER_COLORS = {}															-- Stores individual player colors
 PLAYER_COLORS[0] = { 67, 133, 255 }
@@ -180,20 +170,12 @@ USE_AUTOMATIC_PLAYERS_PER_TEAM = false										-- Should we set the number of p
 CUSTOM_TEAM_PLAYER_COUNT = {}
 CUSTOM_TEAM_PLAYER_COUNT[DOTA_TEAM_GOODGUYS] = 5
 CUSTOM_TEAM_PLAYER_COUNT[DOTA_TEAM_BADGUYS]  = 5
-CUSTOM_TEAM_PLAYER_COUNT[DOTA_TEAM_CUSTOM_1] = 0
-CUSTOM_TEAM_PLAYER_COUNT[DOTA_TEAM_CUSTOM_2] = 0
-CUSTOM_TEAM_PLAYER_COUNT[DOTA_TEAM_CUSTOM_3] = 0
-CUSTOM_TEAM_PLAYER_COUNT[DOTA_TEAM_CUSTOM_4] = 0
-CUSTOM_TEAM_PLAYER_COUNT[DOTA_TEAM_CUSTOM_5] = 0
-CUSTOM_TEAM_PLAYER_COUNT[DOTA_TEAM_CUSTOM_6] = 0
-CUSTOM_TEAM_PLAYER_COUNT[DOTA_TEAM_CUSTOM_7] = 0
-CUSTOM_TEAM_PLAYER_COUNT[DOTA_TEAM_CUSTOM_8] = 0
 
 if GetMapName() == "imba_standard" then
 	IMBA_PICK_MODE_ALL_PICK = true
 elseif GetMapName() == "imba_custom" then
 	IMBA_PICK_MODE_ALL_PICK = true
-elseif GetMapName() == "imba_custom_10v10" then
+elseif GetMapName() == "imba_frantic_10v10" then
 	IMBA_PICK_MODE_ALL_PICK = true
 	IMBA_PLAYERS_ON_GAME = 20
 	CUSTOM_TEAM_PLAYER_COUNT[DOTA_TEAM_GOODGUYS] = 10
@@ -234,10 +216,10 @@ ENABLED_RUNES[DOTA_RUNE_ARCANE] = true
 -- IMBA: game mode globals
 -------------------------------------------------------------------------------------------------
 
-GAME_WINNER_TEAM = "none"													-- Tracks game winner
+GAME_WINNER_TEAM = 0														-- Tracks game winner
 
 IMBA_HYPER_MODE_ON = false													-- Is Hyper mode activated?
-if GetMapName() ~= "imba_custom_10v10" then
+if GetMapName() ~= "imba_frantic_10v10" then
 	IMBA_FRANTIC_MODE_ON = false
 else
 	IMBA_FRANTIC_MODE_ON = true
@@ -251,36 +233,36 @@ IMBA_ALL_RANDOM_HERO_SELECTION_TIME = 5.0									-- Time we need to wait before
 
 -- Global Gold earning, values are doubled with Hyper for non-custom maps
 CUSTOM_GOLD_BONUS = {} -- 1 = Normal, 2 = Hyper
-CUSTOM_GOLD_BONUS["imba_standard"] = {75, 150}
-CUSTOM_GOLD_BONUS["imba_10v10"] = {75, 150}
-CUSTOM_GOLD_BONUS["imba_custom_10v10"] = {200, 200}
+CUSTOM_GOLD_BONUS["imba_standard"] = {40, 40}
+CUSTOM_GOLD_BONUS["imba_10v10"] = {40, 40}
+CUSTOM_GOLD_BONUS["imba_frantic_10v10"] = {150, 150}
 
--- Global XP earning, values are doubled with Hyper for non-custom maps
+-- Global XP earning, values are doubled with Hyper for non-custom maps (right now this is not used anymore, but i'll keep it there just in case)
 CUSTOM_XP_BONUS = {} -- 1 = standard, 2 = 10v10, 3 = custom
-CUSTOM_XP_BONUS["imba_standard"] = {40, 80}
-CUSTOM_XP_BONUS["imba_10v10"] = {40, 80}
-CUSTOM_XP_BONUS["imba_custom_10v10"] = {200, 200}
+CUSTOM_XP_BONUS["imba_standard"] = {0, 0}
+CUSTOM_XP_BONUS["imba_10v10"] = {0, 0}
+CUSTOM_XP_BONUS["imba_frantic_10v10"] = {150, 150}
 
 -- Hero base level, values are doubled with Hyper for non-custom maps
 HERO_STARTING_LEVEL = {} -- 1 = standard, 2 = 10v10, 3 = custom
 HERO_STARTING_LEVEL["imba_standard"] = {1, 1}
 HERO_STARTING_LEVEL["imba_10v10"] = {1, 1}
-HERO_STARTING_LEVEL["imba_custom_10v10"] = {5, 12}
+HERO_STARTING_LEVEL["imba_frantic_10v10"] = {5, 12}
 
 MAX_LEVEL = {}
 MAX_LEVEL["imba_standard"] = {40, 40}
 MAX_LEVEL["imba_10v10"] = {40, 40}
-MAX_LEVEL["imba_custom_10v10"] = {100, 200}
+MAX_LEVEL["imba_frantic_10v10"] = {40, 100}
 
 HERO_INITIAL_GOLD = {}
-HERO_INITIAL_GOLD["imba_standard"] = {1200, 2000}
-HERO_INITIAL_GOLD["imba_10v10"] = {2000, 3000}
-HERO_INITIAL_GOLD["imba_custom_10v10"] = {2000, 5000}
+HERO_INITIAL_GOLD["imba_standard"] = {1200, 1200}
+HERO_INITIAL_GOLD["imba_10v10"] = {1200, 1200}
+HERO_INITIAL_GOLD["imba_frantic_10v10"] = {2000, 5000}
 
 GOLD_TICK_TIME = {}
 GOLD_TICK_TIME["imba_standard"] = 0.6
 GOLD_TICK_TIME["imba_10v10"] = 0.6
-GOLD_TICK_TIME["imba_custom_10v10"] = 0.4
+GOLD_TICK_TIME["imba_frantic_10v10"] = 0.4
 
 IMBA_COURIERS = {}
 
@@ -312,9 +294,7 @@ TOWER_UPGRADE_TREE["hardlane"]["tier_2"] = {}
 TOWER_UPGRADE_TREE["hardlane"]["tier_3"] = {}																		
 
 MAP_INITIAL_GOLD = 0														-- Gold granted to players at the start of the game on a normal pick
-
 USE_CUSTOM_HERO_LEVELS = true												-- Should we allow heroes to have custom levels?
-
 CHEAT_ENABLED = false
 
 -- Update game mode net tables

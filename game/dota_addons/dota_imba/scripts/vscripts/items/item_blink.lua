@@ -10,14 +10,12 @@ if item_imba_blink == nil then item_imba_blink = class({}) end
 LinkLuaModifier( "modifier_imba_blink_dagger_handler", "items/item_blink.lua", LUA_MODIFIER_MOTION_NONE ) -- Check if the target was damaged and set cooldown
 
 function item_imba_blink:GetBehavior()
-	return DOTA_ABILITY_BEHAVIOR_POINT + DOTA_ABILITY_BEHAVIOR_ROOT_DISABLES end
-
-function item_imba_blink:GetAbilityTextureName()
-   return "custom/imba_blink"
+	return DOTA_ABILITY_BEHAVIOR_POINT + DOTA_ABILITY_BEHAVIOR_ROOT_DISABLES
 end
 
 function item_imba_blink:GetIntrinsicModifierName()
-	return "modifier_imba_blink_dagger_handler" end
+	return "modifier_imba_blink_dagger_handler"
+end
 
 function item_imba_blink:OnSpellStart()
 	local caster = self:GetCaster()
@@ -26,30 +24,17 @@ function item_imba_blink:OnSpellStart()
 	
 	local distance = (target_point - origin_point):Length2D()
 	local max_blink_range = self:GetSpecialValueFor("max_blink_range")
-	
-	local blink_effect = "particles/item/blink/blink_dagger_start_imba.vpcf"
-	local blink_effect_end = "particles/item/blink/blink_dagger_imbaend.vpcf"
-	
+
 	-- Disjointing everything
 	ProjectileManager:ProjectileDodge(caster)
-	
-	-- Defining the color, either default or by command
-	local color
-	if caster.blinkcolor then
-		color = caster.blinkcolor
-	else
-		color = Vector(0, 20, 255) -- Blueish, just a little brighter
-	end
-	
+
 	-- Creating the particle & sound at the start-location
-	local blink_pfx = ParticleManager:CreateParticle(blink_effect, PATTACH_ABSORIGIN, caster)
-	ParticleManager:SetParticleControl(blink_pfx, 15, color)
+	local blink_pfx = ParticleManager:CreateParticle(caster.blink_effect, PATTACH_ABSORIGIN, caster)
 	ParticleManager:ReleaseParticleIndex(blink_pfx)
 	caster:EmitSound("DOTA_Item.BlinkDagger.Activate")
 	
 	-- Set distance if targeted destiny is beyond range
 	if distance > max_blink_range then
-
 		-- Extra parameters
 		local max_extra_distance = self:GetSpecialValueFor("max_extra_distance")
 		local max_extra_cooldown = self:GetSpecialValueFor("max_extra_cooldown")
@@ -76,41 +61,16 @@ function item_imba_blink:OnSpellStart()
 		FindClearSpaceForUnit(caster, target_point, true)
 		
 		-- Create Particle on end-point
-		local blink_end_pfx = ParticleManager:CreateParticle(blink_effect_end, PATTACH_ABSORIGIN, caster)
-		ParticleManager:SetParticleControl(blink_end_pfx, 15, color )
+		local blink_end_pfx = ParticleManager:CreateParticle(caster.blink_effect_end, PATTACH_ABSORIGIN, caster)
 		ParticleManager:ReleaseParticleIndex(blink_end_pfx)
 	end)
 end
 
 function item_imba_blink:GetAbilityTextureName()
-	if IsClient() then
-		local caster = self:GetCaster()
-		if not caster:IsHero() then return "custom/imba_blink" end
-		
-		local carrier_name = caster:GetName()
-		local uniqueBlink = {
-			npc_dota_hero_antimage		= "antimage",
-			npc_dota_hero_bristleback	= "bristleback",
-			npc_dota_hero_brewmaster	= "brewmaster",
-			npc_dota_hero_chen			= "chen",
-			npc_dota_hero_clinkz		= "clinkz",
-			npc_dota_hero_doom_bringer	= "doom",
-			npc_dota_hero_invoker		= "invoker",
-			npc_dota_hero_jakiro		= "jakiro",
-			npc_dota_hero_leshrac		= "leshrac",
-			npc_dota_hero_lycan			= "lycan",
-			npc_dota_hero_meepo			= "meepo",
-			npc_dota_hero_naga_siren	= "naga",
-			npc_dota_hero_nyx_assassin	= "nyx",
-			npc_dota_hero_silencer		= "silencer"
-		}
-		
-		if uniqueBlink[carrier_name] then
-			return "custom/imba_blink_"..uniqueBlink[carrier_name]
-		end
-		
-		return "custom/imba_blink"
-	end
+	if not IsClient() then return end
+	local caster = self:GetCaster()
+	if not caster.blink_icon_client then return "custom/imba_blink" end
+	return "custom/imba_blink"..caster.blink_icon_client
 end
 
 -----------------------------------------------------------------------------------------------------------
@@ -120,6 +80,7 @@ if modifier_imba_blink_dagger_handler == nil then modifier_imba_blink_dagger_han
 function modifier_imba_blink_dagger_handler:IsHidden() return true end
 function modifier_imba_blink_dagger_handler:IsDebuff() return false end
 function modifier_imba_blink_dagger_handler:IsPurgable() return false end
+function modifier_imba_blink_dagger_handler:RemoveOnDeath() return false end
 function modifier_imba_blink_dagger_handler:GetAttributes() return MODIFIER_ATTRIBUTE_MULTIPLE end
 
 function modifier_imba_blink_dagger_handler:OnCreated()
@@ -152,6 +113,24 @@ function modifier_imba_blink_dagger_handler:OnCreated()
 					EmitAnnouncerSoundForPlayer(blinkResponse[carrier_name], caster:GetPlayerID())
 				end)
 			end
+		end
+	end
+	self:OnIntervalThink()
+	self:StartIntervalThink(1.0)
+end
+
+function modifier_imba_blink_dagger_handler:OnIntervalThink()
+	local caster = self:GetCaster()
+	if caster:IsIllusion() then return end
+	if IsServer() then
+		self:SetStackCount(caster.blink_icon)
+	end
+	if IsClient() then
+		local icon = self:GetStackCount()
+		if icon == 0 then
+			caster.blink_icon_client = nil
+		else
+			caster.blink_icon_client = icon
 		end
 	end
 end
@@ -202,29 +181,16 @@ function item_imba_blink_boots:OnSpellStart()
 	local distance = (target_point - origin_point):Length2D()
 	local max_blink_range = self:GetSpecialValueFor("max_blink_range")
 
-	local blink_effect = "particles/item/blink/blink_dagger_start_imba.vpcf"
-	local blink_effect_end = "particles/item/blink/blink_dagger_imbaend.vpcf"
-
 	-- Disjointing everything
 	ProjectileManager:ProjectileDodge(caster)
 
-	-- Defining the color, either default or by command
-	local color
-	if caster.blinkcolor then
-		color = caster.blinkcolor
-	else
-		color = Vector(0, 20, 255) -- Blueish, just a little brighter
-	end
-
 	-- Creating the particle & sound at the start-location
-	local blink_pfx = ParticleManager:CreateParticle(blink_effect, PATTACH_ABSORIGIN, caster)
-	ParticleManager:SetParticleControl(blink_pfx, 15, color)
+	local blink_pfx = ParticleManager:CreateParticle(caster.blink_effect, PATTACH_ABSORIGIN, caster)
 	ParticleManager:ReleaseParticleIndex(blink_pfx)
 	caster:EmitSound("DOTA_Item.BlinkDagger.Activate")
 
 	-- Set distance if targeted destiny is beyond range
 	if distance > max_blink_range then
-
 		-- Extra parameters
 		local max_extra_distance = self:GetSpecialValueFor("max_extra_distance")
 		local max_extra_cooldown = self:GetSpecialValueFor("max_extra_cooldown")
@@ -251,8 +217,7 @@ function item_imba_blink_boots:OnSpellStart()
 		FindClearSpaceForUnit(caster, target_point, true)
 
 		-- Create Particle on end-point
-		local blink_end_pfx = ParticleManager:CreateParticle(blink_effect_end, PATTACH_ABSORIGIN, caster)
-		ParticleManager:SetParticleControl(blink_end_pfx, 15, color )
+		local blink_end_pfx = ParticleManager:CreateParticle(caster.blink_effect_end, PATTACH_ABSORIGIN, caster)
 		ParticleManager:ReleaseParticleIndex(blink_end_pfx)
 	end)
 end

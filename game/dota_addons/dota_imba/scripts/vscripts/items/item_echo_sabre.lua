@@ -24,9 +24,6 @@ end
 
 function item_imba_echo_sabre:GetCooldown( nLevel )
 	local cooldown = self.BaseClass.GetCooldown( self, nLevel )
-	if self:GetCaster():IsRangedAttacker() then
-		cooldown = self:GetSpecialValueFor("ranged_cooldown")
-	end
 	return cooldown
 end
 -------------------------------------------
@@ -92,6 +89,7 @@ end
 function modifier_imba_echo_sabre_passive:OnAttackStart(keys)
 	local item = self:GetAbility()
 	local parent = self:GetParent()
+	if parent:IsRangedAttacker() then return nil end
 	if item then
 		if (keys.attacker == parent) and (parent:IsRealHero() or parent:IsClone()) then
 			if item:IsCooldownReady() then
@@ -121,9 +119,6 @@ end
 
 function item_imba_reverb_rapier:GetCooldown( nLevel )
 	local cooldown = self.BaseClass.GetCooldown( self, nLevel )
-	if self:GetCaster():IsRangedAttacker() then
-		cooldown = self:GetSpecialValueFor("ranged_cooldown")
-	end
 	return cooldown
 end
 -------------------------------------------
@@ -189,6 +184,7 @@ end
 function modifier_imba_reverb_rapier_passive:OnAttackStart(keys)
 	local item = self:GetAbility()
 	local parent = self:GetParent()
+	if parent:IsRangedAttacker() then return nil end
 	if item then
 		if (keys.attacker == parent) and (parent:IsRealHero() or parent:IsClone()) then
 			if item:IsCooldownReady() then
@@ -238,11 +234,7 @@ end
 function modifier_imba_echo_rapier_haste:OnAttack(keys)
 	if self.parent == keys.attacker then
 		
-		-- If the target is a deflector, do nothing
-		if keys.target:HasModifier("modifier_imba_juggernaut_blade_fury") and self.parent:IsRangedAttacker() then
-		else
 		keys.target:AddNewModifier(self.parent, self:GetAbility(), "modifier_imba_echo_rapier_debuff_slow", {duration = self.slow_duration})
-		end
 		
 		if self:GetStackCount() == 1 then
 			self:Destroy()

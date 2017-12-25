@@ -3077,7 +3077,7 @@
 		//-------------------------------------------------------------------------------------------------------------
 		"ID"							"2146"
 		"BaseClass"						"item_datadriven"
-		"AbilityTextureName" 			"custom/imba_shivas_guard"
+		"AbilityTextureName" 			"custom/imba_shiva"
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IGNORE_CHANNEL | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
 		"FightRecapLevel"				"1"
 
@@ -3170,8 +3170,6 @@
 				"Function"				"ShivaBlast"
 
 				"sound_cast"			"DOTA_Item.ShivasGuard.Activate"
-				"particle_blast"		"particles/items2_fx/shivas_guard_active.vpcf"
-				"particle_hit"			"particles/items2_fx/shivas_guard_impact.vpcf"
 				"modifier_slow"			"modifier_item_imba_shivas_blast_slow"
 			}
 		}
@@ -5143,20 +5141,15 @@
 		"ID"							"2108"
 		"BaseClass"						"item_lua"
 		"ScriptFile"					"items/item_swords.lua"
-		"AbilityTextureName"			"custom/imba_azura"
+		"AbilityTextureName"			"item_kaya"
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
-
-		// Stats
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCooldown"				"5"
-		"AbilitySharedCooldown"			"sword"
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
 		"ItemCost"						"1750"
 		"ItemShopTags"					"int;unique"
 		"ItemQuality"					"artifact"
-		"ItemAliases"					"azura"
+		"ItemAliases"					"kaya"
 
 		// Special
 		//-------------------------------------------------------------------------------------------------------------
@@ -5165,34 +5158,14 @@
 			"01"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"proc_chance"			"30"
+				"spell_amp"				"10"
 			}
 			"02"
 			{
-				"var_type"				"FIELD_INTEGER"
-				"proc_duration_enemy"	"1"
-			}
-			"03"
-			{
-				"var_type"				"FIELD_INTEGER"
-				"amp_stack"				"-3"
-			}
-			"04"
-			{
-				"var_type"				"FIELD_INTEGER"
-				"max_stacks"			"7"
-			}
-			"05"
-			{
-				"var_type"				"FIELD_INTEGER"
-				"stack_duration"		"5"
-			}
-			"06"
-			{
-				"var_type"				"FIELD_INTEGER"
+				"var_type"				"FIELD_INTEGER" // also mana cost reduction
 				"bonus_cdr"				"10"
 			}
-			"07"
+			"03"
 			{
 				"var_type"				"FIELD_INTEGER"
 				"bonus_int"				"16"
@@ -5714,6 +5687,11 @@
 				"var_type"				"FIELD_INTEGER"
 				"proc_cooldown"			"5"
 			}
+			"13"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"spell_amp"				"10"
+			}
 		}
 	}
 
@@ -5994,6 +5972,7 @@
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
 		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_FRIENDLY"
 		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_BUILDING"
+		"AbilitySharedCooldown"			"some_viking_shit"
 
 		// Stats
 		//-------------------------------------------------------------------------------------------------------------
@@ -9089,27 +9068,12 @@
 			"03"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_intellect"		"28"
+				"bonus_intellect"		"24"
 			}
 			"04"
 			{
-				"var_type"				"FIELD_FLOAT"
-				"burn_duration"			"2"
-			}
-			"05"
-			{
 				"var_type"				"FIELD_INTEGER"
-				"burn_amount"			"7"
-			}
-			"06"
-			{
-				"var_type"				"FIELD_FLOAT"
-				"burn_tick"				"0.5"
-			}
-			"07"
-			{
-				"var_type"				"FIELD_INTEGER"
-				"spell_power"			"12"
+				"spell_power"			"15"
 			}
 		}
 	}
@@ -9136,12 +9100,12 @@
 		"ItemResult"					"item_imba_elder_staff"
 		"ItemRequirements"
 		{
-			"01"						"item_imba_nether_wand;item_imba_aether_lens"
+			"01"						"item_imba_nether_wand;item_imba_azura"
 		}
 	}
 
 	//=================================================================================================================
-	// Elder Staff
+	// Arcane Nexus
 	//=================================================================================================================
 	"item_imba_elder_staff"
 	{
@@ -9150,15 +9114,15 @@
 		"ID"							"2206"
 		"BaseClass"						"item_lua"
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
-		"AbilityTextureName"			"custom/imba_elder_staff"
+		"AbilityTextureName"			"custom/imba_arcane_nexus"
 		"ScriptFile"					"items/item_nether_wand.lua"
 
 		// Item Info
 		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"						"5525"
+		"ItemCost"						"4925"
 		"ItemShopTags"					"int;damage;attack_speed;attack_damage;mana;hard_to_tag"
 		"ItemQuality"					"artifact"
-		"ItemAliases"					"elder staff"
+		"ItemAliases"					"arcane nexus"
 		"ItemDeclarations"				"DECLARE_PURCHASES_TO_TEAMMATES | DECLARE_PURCHASES_IN_SPEECH | DECLARE_PURCHASES_TO_SPECTATORS"
 
 		// Special
@@ -9167,8 +9131,8 @@
 		{
 			"01"
 			{
-				"var_type"				"FIELD_INTEGER"
-				"bonus_damage"			"15"
+				"var_type"						"FIELD_INTEGER"
+				"bonus_damage"					"15"
 				"CalculateSpellDamageTooltip"	"0"
 			}
 			"02"
@@ -9179,42 +9143,17 @@
 			"03"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_intellect"		"30"
+				"bonus_intellect"		"40"
 			}
 			"04"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bonus_mana"			"375"
+				"spell_power"			"26"
 			}
 			"05"
 			{
-				"var_type"				"FIELD_INTEGER"
-				"bonus_mana_regen"		"2.0"
-			}
-			"06"
-			{
-				"var_type"				"FIELD_INTEGER"
-				"cast_range_bonus"		"350"
-			}
-			"07"
-			{
-				"var_type"				"FIELD_INTEGER"
-				"spell_power"			"20"
-			}
-			"08"
-			{
-				"var_type"				"FIELD_FLOAT"
-				"burn_duration"			"2"
-			}
-			"09"
-			{
-				"var_type"				"FIELD_INTEGER"
-				"burn_amount"			"8"
-			}
-			"10"
-			{
-				"var_type"				"FIELD_FLOAT"
-				"burn_tick"				"0.5"
+				"var_type"				"FIELD_INTEGER" // also mana cost reduction
+				"bonus_cdr"				"10"
 			}
 		}
 	}
@@ -9598,175 +9537,6 @@
 			{
 				"var_type"					"FIELD_INTEGER"
 				"time_to_double"			"8"
-			}
-		}
-	}
-
-	//=================================================================================================================
-	// Bounty Rune
-	//=================================================================================================================
-	"item_imba_rune_bounty"
-	{
-		// General
-		//-------------------------------------------------------------------------------------------------------------
-		"ID"									"2218"
-		"BaseClass"								"item_datadriven"
-		"Model"									"models/props_gameplay/rune_goldxp.vmdl"
-
-		// Item Info
-		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"								"0"
-		"ItemQuality"							"artifact"
-		"ItemPurchasable"						"0"
-		"ItemSellable"							"0"
-		"ItemKillable"							"1"
-	}
-
-	//=================================================================================================================
-	// Bounty Rune (Arena Mode)
-	//=================================================================================================================
-	"item_imba_rune_bounty_arena"
-	{
-		// General
-		//-------------------------------------------------------------------------------------------------------------
-		"ID"									"2222"
-		"BaseClass"								"item_datadriven"
-		"Model"									"models/props_gameplay/gold_bag.vmdl"
-
-		// Item Info
-		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"								"0"
-		"ItemQuality"							"artifact"
-		"ItemPurchasable"						"0"
-		"ItemSellable"							"0"
-		"ItemKillable"							"1"
-	}
-
-	//=================================================================================================================
-	// Boundless Energy (regeneration rune)
-	//=================================================================================================================
-	"item_imba_rune_regeneration"
-	{
-		// General
-		//-------------------------------------------------------------------------------------------------------------
-		"ID"									"2221"
-		"BaseClass"								"item_datadriven"
-		"Model"									"models/props_gameplay/rune_regeneration01.vmdl"
-
-		// Item Info
-		//-------------------------------------------------------------------------------------------------------------
-		"ItemCost"								"0"
-		"ItemQuality"							"artifact"
-		"ItemPurchasable"						"0"
-		"ItemSellable"							"0"
-		"ItemKillable"							"1"
-
-		// Special
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilitySpecial"
-		{
-			"01"
-			{
-				"var_type"						"FIELD_INTEGER"
-				"hp_regen_base_owner"			"50"
-			}
-			"02"
-			{
-				"var_type"						"FIELD_INTEGER"
-				"hp_regen_perc_owner"			"5"
-			}
-			"03"
-			{
-				"var_type"						"FIELD_INTEGER"
-				"mp_regen_base_owner"			"35"
-			}
-			"04"
-			{
-				"var_type"						"FIELD_FLOAT"
-				"mp_regen_perc_owner"			"3.5"
-			}
-			"05"
-			{
-				"var_type"						"FIELD_INTEGER"
-				"aura_radius"					"1200"
-			}
-			"06"
-			{
-				"var_type"						"FIELD_INTEGER"
-				"hp_regen_base_owner"			"20"
-			}
-			"07"
-			{
-				"var_type"						"FIELD_INTEGER"
-				"hp_regen_perc_owner"			"2"
-			}
-			"08"
-			{
-				"var_type"						"FIELD_INTEGER"
-				"mp_regen_base_owner"			"15"
-			}
-			"09"
-			{
-				"var_type"						"FIELD_FLOAT"
-				"mp_regen_perc_owner"			"1.5"
-			}
-			"10"
-			{
-				"var_type"						"FIELD_INTEGER"
-				"duration"						"25"
-			}
-		}
-
-		"Modifiers"
-		{
-			"modifier_imba_rune_regeneration_owner"
-			{
-				"Passive"						"0"
-				"IsHidden"						"0"
-				"IsBuff"						"1"
-				"IsPurgable"					"1"
-
-				"TextureName"			        "custom/imba_rune_regeneration"
-
-				"EffectName"					"particles/generic_gameplay/rune_regen_owner.vpcf"
-				"EffectAttachType"				"follow_origin"
-
-				"Duration"						"%duration"
-
-				"Aura"							"modifier_imba_rune_regeneration_aura"
-				"Aura_Radius"					"%aura_radius"
-				"Aura_Teams"					"DOTA_UNIT_TARGET_TEAM_FRIENDLY"
-				"Aura_Types"					"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
-				"Aura_Flags"					"DOTA_UNIT_TARGET_FLAG_NONE"
-
-				"Properties"
-				{
-					"MODIFIER_PROPERTY_HEALTH_REGEN_CONSTANT"			"%hp_regen_base_owner"
-					"MODIFIER_PROPERTY_HEALTH_REGEN_PERCENTAGE"			"%hp_regen_perc_owner"
-					"MODIFIER_PROPERTY_MANA_REGEN_CONSTANT"				"35"  //This is hardcoded due to an obscure engine bug.
-					"MODIFIER_PROPERTY_MANA_REGEN_TOTAL_PERCENTAGE"		"%mp_regen_perc_owner"
-				}
-			}
-
-			"modifier_imba_rune_regeneration_aura"
-			{
-				"Passive"						"0"
-				"IsHidden"						"1"
-				"IsBuff"						"1"
-				"IsPurgable"					"0"
-
-				"TextureName"			        "custom/imba_rune_regeneration"
-
-				"EffectName"					"particles/generic_gameplay/rune_regen_owner.vpcf"
-				"EffectAttachType"				"follow_origin"
-
-				"Properties"
-				{
-					"MODIFIER_PROPERTY_HEALTH_REGEN_CONSTANT"			"%hp_regen_base_owner"
-					"MODIFIER_PROPERTY_HEALTH_REGEN_PERCENTAGE"			"%hp_regen_perc_owner"
-					"MODIFIER_PROPERTY_MANA_REGEN_CONSTANT"				"15"  //This is hardcoded due to an obscure engine bug.
-					"MODIFIER_PROPERTY_MANA_REGEN_TOTAL_PERCENTAGE"		"%mp_regen_perc_owner"
-				}
 			}
 		}
 	}
@@ -10264,7 +10034,7 @@
 	{
 		"ID"							"2230"
 		"BaseClass"						"item_lua"
-		"AbilityTextureName"			"item_lifesteal"
+		"AbilityTextureName"			"custom/imba_lifesteal"
 		"ScriptFile"					"items/item_lifesteal.lua"
 
 		// Item Info
@@ -10337,7 +10107,7 @@
 	{
 		"ID"							"2232"
 		"BaseClass"						"item_lua"
-		"AbilityTextureName"			"item_mask_of_madness"
+		"AbilityTextureName"			"custom/imba_mask_of_madness"
 		"ScriptFile"					"items/item_mask_of_madness.lua"
 
 		// Item Info
@@ -10462,7 +10232,7 @@
 	{
 		"ID"							"2234"
 		"BaseClass"						"item_lua"
-		"AbilityTextureName"			"item_satanic"
+		"AbilityTextureName"			"custom/imba_satanic"
 		"ScriptFile"					"items/item_satanic.lua"
 
 		// Item Info
@@ -10580,7 +10350,7 @@
 	{
 		"ID"							"2240"
 		"BaseClass"						"item_lua"
-		"AbilityTextureName"			"item_urn_of_shadows"
+		"AbilityTextureName"			"custom/imba_urn_of_shadows"
 		"ScriptFile"					"items/item_urn_of_shadows.lua"
 
 		// Item Info
@@ -10828,7 +10598,7 @@
 	{
 		"ID"							"2244"
 		"BaseClass"						"item_lua"
-		"AbilityTextureName"			"item_hood_of_defiance"
+		"AbilityTextureName"			"custom/imba_hood_of_defiance"
 		"ScriptFile"					"items/item_hood_of_defiance.lua"
 
 		// Item Info
@@ -11044,7 +10814,7 @@
 	{
 		"ID"							"2248"
 		"BaseClass"						"item_lua"
-		"AbilityTextureName"			"item_blade_mail"
+		"AbilityTextureName"			"custom/imba_blade_mail"
 		"ScriptFile"					"items/item_blademail.lua"
 
 		// Item Info
@@ -11234,7 +11004,7 @@
 	{
 		"ID"							"2252"
 		"BaseClass"						"item_lua"
-		"AbilityTextureName"			"item_basher"
+		"AbilityTextureName"			"custom/imba_basher"
 		"ScriptFile"					"items/item_skull_basher.lua"		
 
 		// Item Info
@@ -11344,7 +11114,7 @@
 	{
 		"ID"							"2254"
 		"BaseClass"						"item_lua"
-		"AbilityTextureName"			"item_abyssal_blade"
+		"AbilityTextureName"			"custom/imba_abyssal_blade"
 		"ScriptFile"					"items/item_abyssal_blade.lua"		
 
 		// Item Info
@@ -11503,9 +11273,9 @@
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_DONT_RESUME_ATTACK"
 		"Model"							"models/props_gameplay/red_box.vmdl" 
 		"Effect"						"particles/generic_gameplay/dropped_item.vpcf"
-		"AbilityTextureName"			"item_manta"
+		"AbilityTextureName"			"custom/imba_manta"
 
-		// Stats		
+		// Stats
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityCooldown"				"45.0"
 		"AbilityCastPoint"				"0.0"
@@ -11693,7 +11463,7 @@
 		"ID"							"2258"
 		"BaseClass"						"item_lua"
 		"ScriptFile"					"items/item_crit.lua"
-		"AbilityTextureName" 			"item_lesser_crit"
+		"AbilityTextureName" 			"custom/imba_lesser_crit"
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
 
 		// Item Info
@@ -11748,7 +11518,7 @@
 		"ItemResult"					"item_imba_gungnir"
 		"ItemRequirements"
 		{
-			"01"						"item_imba_monkey_king_bar;item_hurricane_pike"
+			"01"						"item_imba_monkey_king_bar;item_imba_hurricane_pike"
 		}
 	}
 
@@ -11842,7 +11612,7 @@
 			"12"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"bounce_attack_speed"	"400"
+				"bonus_attack_speed"	"400"
 			}
 			"13"
 			{
@@ -11852,12 +11622,12 @@
 			"14"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"melee_bounce_ar"		"100"
+				"melee_bonus_ar"		"100"
 			}
 			"15"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"ranged_bounce_ar"		"150"
+				"ranged_bonus_ar"		"150"
 			}
 			"16"
 			{
@@ -11908,6 +11678,7 @@
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
 		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_FRIENDLY"
 		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_BUILDING"
+		"AbilitySharedCooldown"			"some_viking_shit"
 
 		// Stats
 		//-------------------------------------------------------------------------------------------------------------
@@ -12080,5 +11851,705 @@
 			}
 		}
 	}
-	//next free ID: 2264
+	
+	//=================================================================================================================
+	// Recipe: Force Staff
+	//=================================================================================================================
+	"item_recipe_imba_force_staff"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"ID"							"2264"														// unique ID number for this item.  Do not change this once established or it will invalidate collected stats.
+		"Model"							"models/props_gameplay/recipe.vmdl"
+		"BaseClass"						"item_datadriven"
+		"AbilityTextureName" 				"custom/imba_recipe"
+		
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"ItemCost"						"400"	
+		"ItemShopTags"					""
+		
+		// Recipe
+		//-------------------------------------------------------------------------------------------------------------
+		"ItemRecipe"					"1"
+		"ItemResult"					"item_imba_force_staff"
+		"ItemRequirements"
+		{
+			"01"						"item_staff_of_wizardry;item_ring_of_health"
+		}
+	}
+	
+	//=================================================================================================================
+	// Force Staff
+	//=================================================================================================================
+	"item_imba_force_staff"
+	{
+		"BaseClass"						"item_lua"
+		"ScriptFile"					"items/item_gungnir"
+		"AbilityTextureName"			"custom/imba_force_staff"
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"ID"							"2265"														// unique ID number for this item.  Do not change this once established or it will invalidate collected stats.
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_DONT_RESUME_ATTACK"
+		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_BOTH | DOTA_UNIT_TARGET_TEAM_CUSTOM"
+		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_CUSTOM"
+		"FightRecapLevel"				"1"
+
+		// Stats
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"				"800"
+		"AbilityCastPoint"				"0.0"
+		"AbilityCooldown"				"16.0"
+		"AbilitySharedCooldown"			"force"
+
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"25"
+		"ItemCost"						"2250"
+		"ItemShopTags"					"int;damage;attack_speed;hard_to_tag"
+		"ItemQuality"					"rare"
+		"ItemAliases"					"fs;force staff"
+		"ItemDeclarations"				"DECLARE_PURCHASES_TO_TEAMMATES | DECLARE_PURCHASES_TO_SPECTATORS"
+		"ShouldBeSuggested"				"1"
+		
+		// Special	
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_intellect"		"10"
+			}
+			"02"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"bonus_health_regen"	"7"
+			}
+			"03"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"push_length"			"750"
+			}
+			"04"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"duration"			    "0.4"
+			}
+		}
+	}
+
+	//=================================================================================================================
+	// Recipe: Hurricane Pike
+	//=================================================================================================================
+	"item_recipe_imba_hurricane_pike"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"ID"							"2266"														// unique ID number for this item.  Do not change this once established or it will invalidate collected stats.
+		"Model"							"models/props_gameplay/recipe.vmdl"
+		"BaseClass"						"item_datadriven"
+		"AbilityTextureName" 				"custom/imba_recipe"
+		
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"ItemCost"						"0"	
+		"ItemShopTags"					""
+		
+		// Recipe
+		//-------------------------------------------------------------------------------------------------------------
+		"ItemRecipe"					"1"
+		"ItemResult"					"item_imba_hurricane_pike"
+		"ItemRequirements"
+		{
+			"01"						"item_wraith_band;item_imba_force_staff;item_dragon_lance"
+		}
+	}
+	
+	//=================================================================================================================
+	// Hurricane Pike
+	//=================================================================================================================
+	"item_imba_hurricane_pike"
+	{
+		"BaseClass"						"item_lua"
+		"ScriptFile"						"items/item_gungnir"
+		"AbilityTextureName"				"item_hurricane_pike"
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"ID"							"2267"														// unique ID number for this item.  Do not change this once established or it will invalidate collected stats.
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_DONT_RESUME_ATTACK"
+		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_BOTH | DOTA_UNIT_TARGET_TEAM_CUSTOM"
+		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_CUSTOM"
+		"FightRecapLevel"				"1"
+
+		// Stats
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"				"800"
+		"AbilityCastPoint"				"0.0"
+		"AbilityCooldown"				"15.0"
+		"AbilitySharedCooldown"			"force"
+
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"25"
+		"ItemCost"						"4615"
+		"ItemShopTags"					"int;damage;attack_speed;hard_to_tag"
+		"ItemQuality"					"epic"
+		"ItemAliases"					"fs;force staff"
+		"ItemDeclarations"				"DECLARE_PURCHASES_TO_TEAMMATES | DECLARE_PURCHASES_TO_SPECTATORS"
+		"ShouldBeSuggested"				"1"
+		
+		// Special	
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_intellect"		"13"
+			}
+			"02"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"bonus_health_regen"	"5.5"
+			}
+			"03"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_agility"			"20"
+			}
+			"04"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_strength"		"15"
+			}
+			"05"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"base_attack_range"		"140"
+			}
+			"06"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"push_length"			"600"
+			}
+			"07"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"enemy_length"			"450"
+			}
+			"08"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"range_duration"		"5"
+			}
+			"09"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"cast_range_enemy"		"400"
+			}
+			"10"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"max_attacks"			"4"
+			}
+			"11"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_attack_speed"	"100"
+			}
+			"12"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"tooltip_range"			"800"
+			}
+		}
+	}
+
+	//=================================================================================================================
+	// Teleport Scroll
+	//=================================================================================================================
+//	"item_tpscroll"
+//	{
+//		"BaseClass"						"item_lua"
+//		"ScriptFile"					"items/item_tp"
+//		"AbilityTextureName"			"item_tpscroll"
+//		// General
+//		//-------------------------------------------------------------------------------------------------------------
+//		"ID"							"2268"														// unique ID number for this item.  Do not change this once established or it will invalidate collected stats.
+//		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_CHANNELLED | DOTA_ABILITY_BEHAVIOR_NOASSIST | DOTA_ABILITY_BEHAVIOR_DONT_RESUME_ATTACK | DOTA_ABILITY_BEHAVIOR_DONT_CANCEL_CHANNEL | DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+//		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_FRIENDLY"
+//		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_BUILDING | DOTA_UNIT_TARGET_HERO"
+//		"AbilityUnitTargetFlags"		"DOTA_UNIT_TARGET_FLAG_INVULNERABLE"
+//		"Model"							"models/props_gameplay/tpscroll01.vmdl"
+
+//		// Stats
+//		//-------------------------------------------------------------------------------------------------------------
+//		"AbilityCastRange"				"0"
+//		"AbilityCooldown"				"45.0"
+//		"AbilitySharedCooldown"			"teleport"
+//		"AbilityChannelTime"			"3.0"
+//		"AbilityCastPoint"				"0.0"
+//		
+//		// Item Info
+//		//-------------------------------------------------------------------------------------------------------------
+//		"AbilityManaCost"				"75"
+//		"ItemCost"						"50"
+//		"ItemShopTags"					"consumable;tutorial"
+//		"ItemQuality"					"consumable"
+//		"ItemAliases"					"tp;town portal scroll;teleport"
+//		"ItemStackable"					"1"
+//		"ItemShareability"				"ITEM_FULLY_SHAREABLE"
+//		"ItemPermanent"					"0"
+//		"ItemInitialCharges"			"1"
+//		"SideShop"						"1"
+//		
+//		// Precache
+//		//-------------------------------------------------------------------------------------------------------------
+//		"precache"
+//		{
+//			"particle"						"particles/items2_fx/teleport_start.vpcf"
+//			"particle"						"particles/items2_fx/teleport_end.vpcf"
+//		}
+//		
+//		// Special	
+//		//-------------------------------------------------------------------------------------------------------------
+//		"AbilitySpecial"
+//		{
+//			"01"
+//			{
+//				"var_type"				"FIELD_INTEGER"
+//				"minimun_distance"		"70"
+//			}
+//			"02"
+//			{
+//				"var_type"				"FIELD_INTEGER"
+//				"maximum_distance"		"575"
+//			}
+//			"03"
+//			{
+//				"var_type"				"FIELD_INTEGER"
+//				"vision_radius"			"200"
+//			}
+//			"04"
+//			{
+//				"var_type"				"FIELD_FLOAT"
+//				"tooltip_channel_time"			"3.0"
+//			}
+//		}
+//	}
+	
+	//=================================================================================================================
+	// Recipe: Travel Boots
+	//=================================================================================================================
+//	"item_recipe_imba_travel_boots"
+//	{
+//		// General
+//		//-------------------------------------------------------------------------------------------------------------
+//		"ID"							"2269"														// unique ID number for this item.  Do not change this once established or it will invalidate collected stats.
+//		"Model"							"models/props_gameplay/recipe.vmdl"
+//		"BaseClass"						"item_datadriven"
+//		"AbilityTextureName" 			"custom/imba_recipe"
+//		
+//		// Item Info
+//		//-------------------------------------------------------------------------------------------------------------
+//		"ItemCost"						"2000"	
+//		"ItemShopTags"					""
+//		
+//		// Recipe
+//		//-------------------------------------------------------------------------------------------------------------
+//		"ItemRecipe"					"1"
+//		"ItemResult"					"item_imba_travel_boots"
+//		"ItemRequirements"
+//		{
+//			"01"						"item_boots;item_tpscroll"
+//		}
+//	}
+	
+//	//=================================================================================================================
+//	// Recipe: Travel Boots2
+//	//=================================================================================================================
+//	"item_recipe_travel_boots_2"
+//	{
+//		// General
+//		//-------------------------------------------------------------------------------------------------------------
+//		"ID"							"2270"														// unique ID number for this item.  Do not change this once established or it will invalidate collected stats.
+//		"Model"							"models/props_gameplay/recipe.vmdl"
+//		"BaseClass"						"item_datadriven"
+//		"AbilityTextureName" 			"custom/imba_recipe"
+//		
+//		// Item Info
+//		//-------------------------------------------------------------------------------------------------------------
+//		"ItemCost"						"0"	
+//		"ItemShopTags"					""
+//		
+//		// Recipe
+//		//-------------------------------------------------------------------------------------------------------------
+//		"ItemRecipe"					"1"
+//		"ItemResult"					"item_imba_travel_boots_2"
+//		"ItemRequirements"
+//		{
+//			"01"						"item_imba_travel_boots;item_recipe_imba_travel_boots"
+//		}
+//	}
+	
+	//=================================================================================================================
+	// Travel Boots
+	//=================================================================================================================
+	"item_imba_travel_boots"
+	{
+		"BaseClass"						"item_lua"
+		"ScriptFile"					"items/item_tp"
+		"AbilityTextureName"			"item_travel_boots"
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"ID"							"2271"														// unique ID number for this item.  Do not change this once established or it will invalidate collected stats.
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_CHANNELLED | DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_DONT_RESUME_ATTACK | DOTA_ABILITY_BEHAVIOR_AOE"
+		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_FRIENDLY"
+		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_CREEP | DOTA_UNIT_TARGET_CUSTOM"
+		"AbilityUnitTargetFlags"		"DOTA_UNIT_TARGET_FLAG_INVULNERABLE"
+
+		// Stats		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"40.0"
+		"AbilitySharedCooldown"			"teleport"
+		"AbilityChannelTime"			"2.0"
+		
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"75"
+		"ItemCost"						"2450"
+		"ItemShopTags"					"teleport;move_speed"
+		"ItemQuality"					"common"
+		"ItemAliases"					"bot;boots of travel;tp"
+		"ItemDeclarations"				"DECLARE_PURCHASES_TO_TEAMMATES | DECLARE_PURCHASES_TO_SPECTATORS"
+		"MaxUpgradeLevel"				"2"
+		"ItemBaseLevel"					"1"
+		"ShouldBeSuggested"				"1"
+		
+		"UpgradesItems"					"item_imba_travel_boots"
+		"UpgradeRecipe"					"item_recipe_imba_travel_boots"
+
+
+		// Special	
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_movement_speed"	"100"
+			}
+			"02"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"maximum_distance"		"575"
+			}
+			"03"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"vision_radius"			"200"
+			}
+			"04"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"tooltip_channel_time"	"2.0"
+			}
+		}
+	}
+	
+	//=================================================================================================================
+	// Travel Boots 2
+	//=================================================================================================================
+	"item_imba_travel_boots_2"
+	{
+		"BaseClass"						"item_lua"
+		"ScriptFile"					"items/item_tp"
+		"AbilityTextureName"			"item_travel_boots_2"
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"ID"							"2272"														// unique ID number for this item.  Do not change this once established or it will invalidate collected stats.
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_CHANNELLED | DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_DONT_RESUME_ATTACK"
+		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_FRIENDLY"
+		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_CREEP"
+		"AbilityUnitTargetFlags"		"DOTA_UNIT_TARGET_FLAG_INVULNERABLE"
+
+		// Stats		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"45.0"
+		"AbilitySharedCooldown"			"teleport"
+		"AbilityChannelTime"			"2.0"
+		
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"75"
+		"ItemCost"						"4400"
+		"ItemShopTags"					"teleport;move_speed"
+		"ItemQuality"					"common"
+		"ItemAliases"					"bot;boots of travel;tp"
+		"ItemDeclarations"				"DECLARE_PURCHASES_TO_TEAMMATES | DECLARE_PURCHASES_TO_SPECTATORS"
+		"MaxUpgradeLevel"				"2"
+		"ItemBaseLevel"					"2"
+		"ShouldBeSuggested"				"1"
+		
+		// Special	
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"bonus_movement_speed"	"100"
+			}
+			"02"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"maximum_distance"		"575"
+			}
+			"03"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"vision_radius"			"200"
+			}
+			"04"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"tooltip_channel_time"	"2.0"
+			}
+		}
+	}
+
+	//=================================================================================================================
+	// Bounty Rune
+	//=================================================================================================================
+	"item_imba_rune_bounty"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"ID"									"2273"
+		"BaseClass"								"item_datadriven"
+		"Model"									"models/props_gameplay/rune_goldxp.vmdl"
+		"Effect"								"particles/generic_gameplay/rune_bounty.vpcf"
+
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"ItemCost"								"0"
+		"ItemQuality"							"artifact"
+		"ItemPurchasable"						"0"
+		"ItemSellable"							"0"
+		"ItemKillable"							"1"
+		"ItemCastOnPickup"						"1"
+	}
+
+	//=================================================================================================================
+	// Nightmare Shadow (haste rune)
+	//=================================================================================================================
+	"item_imba_rune_haste"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"ID"									"2274"
+		"BaseClass"								"item_datadriven"
+		"Model"									"models/props_gameplay/rune_haste01.vmdl"
+		"Effect"								"particles/generic_gameplay/rune_haste.vpcf"
+		"RuneDuration"							"22"
+
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"ItemCost"								"0"
+		"ItemQuality"							"artifact"
+		"ItemPurchasable"						"0"
+		"ItemSellable"							"0"
+		"ItemKillable"							"1"
+		"ItemCastOnPickup"						"1"
+	}
+
+	//=================================================================================================================
+	// Power Surge (double damage rune)
+	//=================================================================================================================
+	"item_imba_rune_double_damage"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"ID"									"2275"
+		"BaseClass"								"item_datadriven"
+		"Model"									"models/props_gameplay/rune_doubledamage01.vmdl"
+		"Effect"								"particles/generic_gameplay/rune_doubledamage.vpcf"
+		"RuneDuration"							"45"
+
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"ItemCost"								"0"
+		"ItemQuality"							"artifact"
+		"ItemPurchasable"						"0"
+		"ItemSellable"							"0"
+		"ItemKillable"							"1"
+		"ItemCastOnPickup"						"1"
+	}
+
+	//=================================================================================================================
+	// Boundless Energy (regeneration rune)
+	//=================================================================================================================
+	"item_imba_rune_regeneration"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"ID"									"2276"
+		"BaseClass"								"item_datadriven"
+		"Model"									"models/props_gameplay/rune_regeneration01.vmdl"
+		"Effect"								"particles/generic_gameplay/rune_regeneration.vpcf"
+		"RuneDuration"							"30"
+
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"ItemCost"								"0"
+		"ItemQuality"							"artifact"
+		"ItemPurchasable"						"0"
+		"ItemSellable"							"0"
+		"ItemKillable"							"1"
+		"ItemCastOnPickup"						"1"
+	}
+
+	//=================================================================================================================
+	// Archmage Soul (arcane rune)
+	//=================================================================================================================
+	"item_imba_rune_arcane"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"ID"									"2277"
+		"BaseClass"								"item_datadriven"
+		"Model"									"models/props_gameplay/rune_arcane.vmdl"
+		"Effect"								"particles/generic_gameplay/rune_arcane.vpcf"
+		"RuneDuration"							"50"
+
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"ItemCost"								"0"
+		"ItemQuality"							"artifact"
+		"ItemPurchasable"						"0"
+		"ItemSellable"							"0"
+		"ItemKillable"							"1"
+		"ItemCastOnPickup"						"1"
+	}
+
+	//=================================================================================================================
+	// Invisibility Rune (invis rune)
+	//=================================================================================================================
+	"item_imba_rune_invisibility"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"ID"									"2278"
+		"BaseClass"								"item_datadriven"
+		"Model"									"models/props_gameplay/rune_invisibility01.vmdl"
+		"Effect"								"particles/generic_gameplay/rune_invisibility.vpcf"
+		"RuneDuration"							"45"
+
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"ItemCost"								"0"
+		"ItemQuality"							"artifact"
+		"ItemPurchasable"						"0"
+		"ItemSellable"							"0"
+		"ItemKillable"							"1"
+		"ItemCastOnPickup"						"1"
+	}
+
+	//=================================================================================================================
+	// Illusion Rune (illusion rune)
+	//=================================================================================================================
+	"item_imba_rune_illusion"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"ID"									"2279"
+		"BaseClass"								"item_datadriven"
+		"Model"									"models/props_gameplay/rune_illusion01.vmdl"
+		"Effect"								"particles/generic_gameplay/rune_illusion.vpcf"
+		"RuneDuration"							"45"
+
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"ItemCost"								"0"
+		"ItemQuality"							"artifact"
+		"ItemPurchasable"						"0"
+		"ItemSellable"							"0"
+		"ItemKillable"							"1"
+		"ItemCastOnPickup"						"1"
+	}
+
+	//=================================================================================================================
+	// Frost Rune (frost rune)
+	//=================================================================================================================
+	"item_imba_rune_frost"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"ID"									"2280"
+		"BaseClass"								"item_datadriven"
+		"Model"									"models/props_gameplay/rune_frost.vmdl"
+		"Effect"								"particles/econ/items/puck/puck_snowflake/puck_snowflake_ambient.vpcf"
+		"RuneDuration"							"45"
+
+		// Item Info
+		//-------------------------------------------------------------------------------------------------------------
+		"ItemCost"								"0"
+		"ItemQuality"							"artifact"
+		"ItemPurchasable"						"0"
+		"ItemSellable"							"0"
+		"ItemKillable"							"1"
+		"ItemCastOnPickup"						"1"
+	}
+
+	//=================================================================================================================
+	// Bottle
+	//=================================================================================================================
+	"item_imba_bottle"
+	{
+		"BaseClass"						"item_lua"
+		"ID"							"2281"
+		"ScriptFile"					"items/item_bottle.lua"
+		"AbilityTextureName"			"custom/bottle_3"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+		"Model"							"models/props_gameplay/bottle_blue.vmdl"
+
+		"AbilityCooldown"				"0.5"
+		"AbilityCastRange"				"350"
+		"AbilityCastPoint"				"0.0"
+		"ItemCost"						"650"
+
+		"ItemQuality"					"consumable"
+		"ItemAliases"					"bottle"
+		"ItemStackable"					"0"
+		"ItemShareability"				"ITEM_PARTIALLY_SHAREABLE"
+		"ItemInitialCharges"			"3"
+		"ItemDisplayCharges"			"1"
+		"IsTempestDoubleClonable"		"0"
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"health_restore"		"100"
+			}
+			"02"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"mana_restore"			"60"
+			}
+			"03"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"restore_time"			"2.5"
+			}
+			"04"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"tooltip_range"			"350"
+			}
+		}
+	}
+	//next free ID: 2282
 }

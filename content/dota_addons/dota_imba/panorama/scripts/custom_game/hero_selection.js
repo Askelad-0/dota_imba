@@ -253,7 +253,7 @@ function MakeNewHero(new_heroes) {
 
 function MakeDisabledHeroes(disabled_10v10, disabled_frantic, disabled_all) {
 	var map_info = Game.GetMapInfo();
-	if (map_info.map_display_name == "imba_10v10" || map_info.map_display_name == "imba_custom_10v10" || map_info.map_display_name == "imba_12v12") {
+	if (map_info.map_display_name == "imba_10v10" || map_info.map_display_name == "imba_frantic_10v10" || map_info.map_display_name == "imba_12v12") {
 		var g = 1;
 		for (g in disabled_10v10) {
 			if (disabled_10v10[g] != null) {
@@ -267,7 +267,7 @@ function MakeDisabledHeroes(disabled_10v10, disabled_frantic, disabled_all) {
 		}
 	}
 
-	if (map_info.map_display_name == "imba_custom_10v10") {
+	if (map_info.map_display_name == "imba_frantic_10v10") {
 		var i = 1;
 		for (i in disabled_frantic) {
 			if (disabled_frantic[i] != null) {
@@ -300,8 +300,8 @@ var DireLevels = 0
 var RadiantCount = 0
 var DireCount = 0
 
-	var str = "Visit W3Schools!";
-	var n = str.search("W3Schools");
+	var str = "Cuckies";
+	var n = str.search("Cuckies");
 	$.Msg(n)
 
 	var radiantPlayers = Game.GetPlayerIDsOnTeam( DOTATeam_t.DOTA_TEAM_GOODGUYS );
@@ -320,20 +320,35 @@ var DireCount = 0
 		RadiantCount = RadiantCount +1
 
 		if (RadiantCount >= 5) {
-			class_option_count = class_option_count +1
-			var ClassOptionPanelRadiant_alt = $.CreatePanel("Panel", $("#LeftPlayers"), "PlayerRow" + class_option_count + "_good");
-			ClassOptionPanelRadiant.AddClass("PlayerOptionRowV10")
-			ClassOptionPanelRadiant_alt.AddClass("PlayerOptionRowV10")
 			RadiantCount = 0
+			if (map_info.map_display_name != "imba_standard") {
+				class_option_count = class_option_count +1
+				var ClassOptionPanelRadiant_alt = $.CreatePanel("Panel", $("#LeftPlayers"), "PlayerRow" + class_option_count + "_good");
+				ClassOptionPanelRadiant.AddClass("PlayerOptionRowV10")
+				ClassOptionPanelRadiant_alt.AddClass("PlayerOptionRowV10")
+			}
 		} else {
 			ClassOptionPanelRadiant.AddClass("PlayerOptionRow")
 		}
 
 		var plyData = CustomNetTables.GetTableValue("player_table", player);
 		if (plyData != null) {
-			RadiantLevels = RadiantLevels + plyData.Lvl / radiantPlayers.length
-			$("#AverageMMRTeamRadiant").text = $.Localize("average_mmr") + RadiantLevels.toFixed([0]);
-			playerPanel.SetPlayerMMR( plyData.Lvl );
+			if (map_info.map_display_name == "imba_standard") {
+				playerPanel.SetPlayerMMR( plyData.IMR_5v5.toFixed([0]) );
+				RadiantLevels = RadiantLevels + plyData.IMR_5v5 / radiantPlayers.length
+				$("#AverageMMRTeamRadiant").text = $.Localize("average_mmr") + RadiantLevels.toFixed([0]);
+			} else if (map_info.map_display_name == "imba_10v10") {
+//				playerPanel.SetPlayerMMR( plyData.IMR_10v10.toFixed([0]) );
+//				RadiantLevels = RadiantLevels + plyData.IMR_10v10 / radiantPlayers.length
+//				$("#AverageMMRTeamRadiant").text = $.Localize("average_mmr") + RadiantLevels.toFixed([0]);
+				playerPanel.SetPlayerMMR( plyData.Lvl.toFixed([0]) );
+				RadiantLevels = RadiantLevels + plyData.Lvl / radiantPlayers.length
+				$("#AverageMMRTeamRadiant").text = $.Localize("average_mmr") + RadiantLevels.toFixed([0]);
+			} else if (map_info.map_display_name == "imba_frantic_10v10") {
+				playerPanel.SetPlayerMMR( plyData.Lvl.toFixed([0]) );
+				RadiantLevels = RadiantLevels + plyData.Lvl / radiantPlayers.length
+				$("#AverageMMRTeamRadiant").text = $.Localize("average_mmr") + RadiantLevels.toFixed([0]);
+			}
 		}
 	});
 
@@ -347,20 +362,35 @@ var DireCount = 0
 		DireCount = DireCount +1
 
 		if (DireCount >= 5) {
-			class_option_count = class_option_count +1
-			var ClassOptionPanelDire_alt = $.CreatePanel("Panel", $("#RightPlayers"), "PlayerRow" + class_option_count + "_bad");
-			ClassOptionPanelDire.AddClass("PlayerOptionRowV10")
-			ClassOptionPanelDire_alt.AddClass("PlayerOptionRowV10")
 			DireCount = 0
+			if (map_info.map_display_name != "imba_standard") {
+				class_option_count = class_option_count +1
+				var ClassOptionPanelDire_alt = $.CreatePanel("Panel", $("#RightPlayers"), "PlayerRow" + class_option_count + "_bad");
+				ClassOptionPanelDire.AddClass("PlayerOptionRowV10")
+				ClassOptionPanelDire_alt.AddClass("PlayerOptionRowV10")
+			}
 		} else {
 			ClassOptionPanelDire.AddClass("PlayerOptionRow")
 		}
 
 		var plyData = CustomNetTables.GetTableValue("player_table", player);
 		if (plyData != null) {
-			DireLevels = DireLevels + plyData.Lvl / direPlayers.length
-			$("#AverageMMRTeamDire").text = $.Localize("average_mmr") + DireLevels.toFixed([0]);
-			playerPanel.SetPlayerMMR( plyData.Lvl );
+			if (map_info.map_display_name == "imba_standard") {
+				playerPanel.SetPlayerMMR( plyData.IMR_5v5.toFixed([0]) );
+				DireLevels = DireLevels + plyData.IMR_5v5 / direPlayers.length
+				$("#AverageMMRTeamDire").text = $.Localize("average_mmr") + DireLevels.toFixed([0]);
+			} else if (map_info.map_display_name == "imba_10v10") {
+//				playerPanel.SetPlayerMMR( plyData.IMR_10v10.toFixed([0]) );
+//				DireLevels = DireLevels + plyData.IMR_10v10 / radiantPlayers.length
+//				$("#AverageMMRTeamDire").text = $.Localize("average_mmr") + DireLevels.toFixed([0]);
+				playerPanel.SetPlayerMMR( plyData.Lvl.toFixed([0]) );
+				DireLevels = DireLevels + plyData.Lvl / direPlayers.length
+				$("#AverageMMRTeamDire").text = $.Localize("average_mmr") + DireLevels.toFixed([0]);
+			} else if (map_info.map_display_name == "imba_frantic_10v10") {
+				playerPanel.SetPlayerMMR( plyData.Lvl.toFixed([0]) );
+				DireLevels = DireLevels + plyData.Lvl / direPlayers.length
+				$("#AverageMMRTeamDire").text = $.Localize("average_mmr") + DireLevels.toFixed([0]);
+			}
 		}
 	});
 
@@ -479,17 +509,21 @@ function SelectHero( heroName ) {
 //	$.Msg(playerPanels[1])
 //	playerPanels[1].SetPreviewHero(heroName)
 
-	var localTeam = Players.GetTeam(Players.GetLocalPlayer())
+	var local_player = Players.GetLocalPlayer()
+	var localTeam = Players.GetTeam(local_player)
 	if (localTeam == 2) {
 		var radiantPlayers = Game.GetPlayerIDsOnTeam( DOTATeam_t.DOTA_TEAM_GOODGUYS );
 		$.Each( radiantPlayers, function( player ) {
-			$.Msg(heroName)
-			playerPanels[Players.GetLocalPlayer()].SetPreviewHero(heroName)
+			if (player == local_player) {
+				playerPanels[local_player].SetPreviewHero(heroName)
+			}
 		});
 	} else if (localTeam == 3) {
 		var direPlayers = Game.GetPlayerIDsOnTeam( DOTATeam_t.DOTA_TEAM_BADGUYS );
 		$.Each( direPlayers, function( player ) {
-			playerPanels[Players.GetLocalPlayer()].SetPreviewHero(heroName)
+			if (player == local_player) {
+				playerPanels[local_player].SetPreviewHero(heroName)
+			}
 		});
 	}
 
@@ -703,6 +737,24 @@ if (hide == false) {
 	$('#LoadingPanel').style.visibility = show;
 }
 
+function ClosePickScreen(hide) {
+	if (Game.GetPlayerInfo(Players.GetLocalPlayer()).player_selected_hero == "npc_dota_hero_wisp") {
+		$.Msg("don't close pick screen")
+		return;
+	}
+	var MainPanel = $.GetContextPanel().GetParent().GetParent().GetParent().GetParent()
+	MainPanel.FindChildTraverse("topbar").style.visibility = "visible";
+	MainPanel.FindChildTraverse("minimap_container").style.visibility = "visible";
+	MainPanel.FindChildTraverse("lower_hud").style.visibility = "visible";
+	MainPanel.FindChildTraverse("HudChat").style.visibility = "visible";
+	MainPanel.FindChildTraverse("NetGraph").style.visibility = "visible";
+	MainPanel.FindChildTraverse("quickstats").style.visibility = "visible";
+
+	$('#BackgroundPanel').style.visibility = "collapse";
+	$('#PickingScreen').style.visibility = "collapse";
+	$('#LoadingPanel').style.visibility = "collapse";
+}
+
 //Subscribe to events
 GameEvents.Subscribe( "picking_done", OnPickingDone );
 GameEvents.Subscribe( "hero_loading_done", OnHeroLoadingDone );
@@ -749,10 +801,15 @@ GameEvents.Subscribe( "pick_abilities", OnReceiveAbilities );
 		$("#MaxLevelValue").text = max_level[1];
 		$("#TowerPowerValue").text = $.Localize( '#imba_gamemode_settings_power_' + tower_power[1] );
 
-		if (map_info.map_display_name == "imba_custom" || map_info.map_display_name == "imba_custom_10v10") {
+		$('#GameModeSelectText').text = $.Localize( '#imba_gamemode_name_ranked_5v5' );
+
+		if (map_info.map_display_name == "imba_custom" || map_info.map_display_name == "imba_frantic_10v10") {
 			if(frantic_mode) {
 				$("#FranticModeValue").text = $.Localize( '#imba_gamemode_game_options_frantic_enabled' );
+				$('#GameModeSelectText').text = $.Localize( '#imba_gamemode_name_frantic' );
 			}
+		} else if (map_info.map_display_name == "imba_10v10") {
+			$('#GameModeSelectText').text = $.Localize( '#imba_gamemode_name_10v10' );
 		}
 
 		// If All Random is enabled, pick a random hero
@@ -761,7 +818,7 @@ GameEvents.Subscribe( "pick_abilities", OnReceiveAbilities );
 			$("#PickHeroBtn").AddClass( "disabled" );
 			$("#RepickBtn").AddClass( "disabled" );
 			$('#GameModeSelectText').text = $.Localize( '#imba_gamemode_name_all_random' );
-			$.Schedule(5, SelectRandomHero);
+			$.Schedule(3, SelectRandomHero);
 		}
 
 		// Tell the server this player's UI was initialized

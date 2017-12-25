@@ -98,7 +98,7 @@ function item_imba_moon_shard:OnSpellStart()
 				target = nil
 			end
 		if target == caster then
-			EmitSoundOn("Item.MoonShard.Consume", caster)
+			EmitSoundOnClient("Item.MoonShard.Consume", caster:GetPlayerOwner())
 			local moon_buff = caster:FindModifierByName("modifier_item_imba_moon_shard_active")
 			if moon_buff then
 				moon_buff:SetStackCount(moon_buff:GetStackCount() + current_stacks)
@@ -108,8 +108,8 @@ function item_imba_moon_shard:OnSpellStart()
 			end
 			caster:RemoveItem(self)
 		else
-			EmitSoundOn("Item.MoonShard.Consume", caster)
-			EmitSoundOn("Item.MoonShard.Consume", target)
+			EmitSoundOnClient("Item.MoonShard.Consume", caster:GetPlayerOwner())
+			EmitSoundOnClient("Item.MoonShard.Consume", target:GetPlayerOwner())
 			local moon_buff = target:FindModifierByName("modifier_item_imba_moon_shard_active")
 			if moon_buff then
 				moon_buff:SetStackCount(moon_buff:GetStackCount() + 1)
@@ -152,7 +152,7 @@ function modifier_item_imba_moon_shard:RemoveOnDeath() return false end
 function modifier_item_imba_moon_shard:OnCreated()
 	if not IsServer() then return end
 	self.as = 0
-	self:StartIntervalThink(1.0)
+	self:StartIntervalThink(0.2)
 end
 
 function modifier_item_imba_moon_shard:OnIntervalThink()
@@ -180,8 +180,10 @@ function modifier_item_imba_moon_shard:DeclareFunctions()
 end
 
 function modifier_item_imba_moon_shard:GetModifierAttackSpeedBonus_Constant()
-	if not IsServer() then return end
-	return self.as
+	if IsServer() then
+		self:SetStackCount(self.as)
+	end
+	return self:GetStackCount()
 end
 
 function modifier_item_imba_moon_shard:GetBonusNightVision()

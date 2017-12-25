@@ -732,9 +732,6 @@ function modifier_imba_return_passive:OnTakeDamage(keys)
 		-- #1 Talent:Reduced self damage_block
 		str_pct_as_damage = str_pct_as_damage + caster:FindTalentValue("special_bonus_imba_centaur_1")
 
-
-
-
 		-- Not inherited by illusions
 		if not target:IsRealHero() then
 			return nil
@@ -745,6 +742,9 @@ function modifier_imba_return_passive:OnTakeDamage(keys)
 			return nil
 		end
 
+		if attacker:IsBuilding() then
+			return nil
+		end
 
 		-- Only commence on enemies attacking Centaur
 		if attacker:GetTeamNumber() ~= parent:GetTeamNumber() and parent == target
@@ -785,14 +785,10 @@ function modifier_imba_return_passive:OnTakeDamage(keys)
 				attacker = parent,
 				damage = final_damage,
 				damage_type = DAMAGE_TYPE_PHYSICAL,
+				damage_flags = DOTA_DAMAGE_FLAG_NO_SPELL_AMPLIFICATION,
 				ability = ability}
 
 			ApplyDamage(damageTable)
-
-			-- If this is a building, do not grant Bulging Hide stack.
-			if attacker:IsBuilding() then
-				return nil
-			end
 
 			-- Add damage block modifier if parent doesn't have one
 			if not parent:HasModifier(modifier_damage_block) then
