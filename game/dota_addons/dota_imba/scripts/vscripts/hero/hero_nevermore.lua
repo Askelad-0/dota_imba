@@ -58,7 +58,7 @@ function imba_nevermore_shadowraze_close:GetCastPoint()
 	local cast_point = self.BaseClass.GetCastPoint(self)
 	local caster = self:GetCaster()
 	--Talent #8: Cast point is halved when in soul frenzy
-	if caster:HasTalent("special_bonus_imba_nevermore_8") and caster:HasModifier("modifier_imba_reqiuem_harvest") then
+	if caster:HasTalent("special_bonus_imba_nevermore_8") and caster:HasModifier("modifier_imba_reqiuem_harvest") and caster:IsAlive() then
 		cast_point = cast_point / 2
 	end
 	return cast_point
@@ -1257,7 +1257,7 @@ end
 function modifier_imba_dark_lord_aura:OnIntervalThink()
     if IsServer() then
         -- #5 Talent: Presence of the Lord gain a soul from nearby enemies
-        if self.caster:HasTalent("special_bonus_imba_nevermore_5") and self.caster:HasModifier(self.modifier_souls) then
+        if self.caster:HasTalent("special_bonus_imba_nevermore_5") and self.caster:HasModifier(self.modifier_souls) and self.caster:IsAlive() then
             local soul_drain_count = self.caster:FindTalentValue("special_bonus_imba_nevermore_5")
             local soul_projectile_speed
 

@@ -150,6 +150,11 @@ function GetStatsForPlayer(ID)
 	end
 end
 
+-- Returns the gameid
+function GetApiGameId()
+	return api_preloaded.id
+end
+
 -- Saves a print message to server
 function ApiPrint(str)
 	imba_api_game_event("debug", str);
@@ -271,7 +276,7 @@ function imba_api_game_complete(complete_fun)
 					if item ~= nil then
 						table.insert(items, tostring(item:GetAbilityName()))
 					end
-				end    
+				end
 			end
 
 			local rhero = json.null
@@ -333,12 +338,12 @@ function imba_api_game_complete(complete_fun)
 
 	ApiPrint(json.encode(args))
 	ApiPrint("game_complete after player info collection");
-	
+
 	-- perform request
 	imba_api():game_complete(args, function (data)
 		ApiPrint("Request good")
 		print("[api-frontend] Request good (Game save)")
-		
+
 		-- data contains info about changed xp and changed imr:
 		if complete_fun ~= nil then
 			complete_fun(data.players)
